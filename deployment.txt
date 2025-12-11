@@ -1,0 +1,94 @@
+# Konteks Proyek dan Panduan Deployment untuk "Future Me"
+
+## 1. Ringkasan Proyek
+- **Nama Proyek**: Web RST dr. Asmir Salatiga (Nama folder saat ini: WebRST)
+- **Teknologi**: Laravel 10, Filament 3.2, Vite, Tailwind CSS, Alpine.js.
+- **Tujuan**: Menggantikan website lama (CodeIgniter) dengan aplikasi Laravel baru ini untuk self-hosting di komputer kantor.
+- **Lingkungan**: Laragon di Windows.
+
+---
+
+## 2. Rangkuman Pencapaian dan Perbaikan (Konteks dari Komputer Pribadi)
+
+Kita telah menyelesaikan banyak perbaikan dan penambahan fitur. Jika ada masalah di masa depan, kemungkinan solusinya ada di bawah ini:
+
+1.  **Perbaikan Upload File CMS (Paling Penting):**
+    *   **Masalah**: Upload gambar di CMS macet (loading berputar terus).
+    *   **Solusi yang Diterapkan**:
+        1.  Memperbaiki `config/filesystems.php` agar `disk('public')` menunjuk ke `storage/app/public` (standar Laravel).
+        2.  Memperbaiki `APP_URL` di file `.env` agar sama persis dengan URL di browser (misal: `http://127.0.0.1:8000`).
+        3.  Menghapus symlink lama (`public/storage`) dan membuatnya ulang dengan `php artisan storage:link`.
+        4.  Menambahkan `.disk('public')` pada komponen `FileUpload` di semua Filament Resource (`ServiceResource.php`, `DoctorResource.php`).
+        5.  Membersihkan cache dengan `php artisan optimize:clear`.
+
+2.  **Perbaikan Logic Tampilan Layanan:**
+    *   **Masalah**: Gambar yang di-upload via CMS tidak muncul di frontend.
+    *   **Solusi**: Menyatukan semua gambar ke `storage`.
+        1.  Memindahkan semua gambar dari `public/assets` ke `storage/app/public/services`.
+        2.  Memperbaiki **Seeder** (`ServiceSeeder`) untuk menyimpan path yang benar (`services/namafile.png`) ke database.
+        3.  Memperbaiki semua file **view** (`home.blade.php`, `featured.blade.php`, `other.blade.php`) agar mengambil gambar dari `storage` dengan `asset('storage/' . $service->image)`.
+
+3.  **Implementasi Auto-Clear Cache:**
+    *   **Masalah**: Perubahan di CMS tidak langsung tampil di frontend.
+    *   **Solusi**: Membuat `ServiceObserver` yang secara otomatis menjalankan `Cache::forget()` untuk cache `home_services`, `services.featured`, dan `services.other` setiap kali ada perubahan pada model `Service`.
+
+4.  **Perbaikan Performa & UX:**
+    *   **Error Timeout**: Halaman daftar Artikel di CMS timeout. Diperbaiki dengan membuat kolom di `ArticleResource.php` menjadi `searchable()` dan `sortable()`.
+    *   **Dropdown Klik**: Dropdown navigasi "Layanan" diubah dari `hover` menjadi `click` menggunakan **Alpine.js**.
+    *   **Slider Homepage**: Tampilan layanan di homepage diubah menjadi slider horizontal.
+
+5.  **Kustomisasi CMS:**
+    *   **Tombol Clear Cache**: Menambahkan tombol "Clear Cache" di halaman Dashboard CMS.
+    *   **Branding**: Menghapus nama "Filament" dan "Laravel" dari panel admin melalui `AdminPanelProvider.php`.
+
+---
+
+## 3. Rencana Migrasi ke Komputer Kantor (Tugas Selanjutnya)
+
+Ini adalah panduan untuk dieksekusi di komputer kantor.
+
+### Bagian A: Di Komputer Pribadi (Sumber)
+
+1.  **ZIP Proyek**: Buat file `.zip` dari folder proyek, **KECUALI** folder `vendor` dan `node_modules`.
+2.  **Export Database**: Buka Laragon -> Database (HeidiSQL). Pilih database `webrst`, lalu ekspor menjadi satu file SQL (misal: `webrst_backup.sql`). Pastikan struktur dan data ikut diekspor.
+3.  **(Opsional/Sangat Direkomendasikan)**: Upload proyek ini ke repositori **GitHub** pribadi. Ini cara terbaik untuk memindahkannya.
+
+### Bagian B: Di Komputer Kantor (Tujuan)
+
+1.  **Siapkan File**: Pindahkan file `.zip` dan `.sql` ke komputer kantor. Ekstrak file zip di `C:\laragon\www\`.
+2.  **Siapkan Database**: Buka Laragon -> Database. Buat database baru dengan nama `webrst`. Pilih database tersebut, lalu impor file `webrst_backup.sql` melalui menu "File" > "Run SQL file...".
+3.  **Setup Proyek Laravel (Wajib):**
+    *   Buka terminal di dalam folder proyek yang baru diekstrak.
+    *   Jalankan perintah berikut secara berurutan:
+        ```bash
+        # 1. Install dependensi PHP
+        composer install
+
+        # 2. Install dependensi JS
+        npm install
+
+        # 3. Salin file environment
+        copy .env.example .env
+
+        # 4. Generate kunci aplikasi baru
+        php artisan key:generate
+
+        # 5. SESUAIKAN FILE .ENV!
+        #    - Atur DB_DATABASE, DB_USERNAME, DB_PASSWORD sesuai komputer kantor.
+        #    - Atur APP_URL sesuai URL lokal di kantor (misal: http://nama-proyek.test)
+
+        # 6. Buat symlink storage (wajib untuk gambar)
+        php artisan storage:link
+
+        # 7. Compile aset frontend
+        npm run build
+
+        # 8. Bersihkan semua cache untuk memulai dari awal
+        php artisan optimize:clear
+        ```
+
+### Catatan untuk "Future Me":
+
+-   Tanyakan pada user nama folder/domain yang akan digunakan di komputer kantor agar bisa menyesuaikan `APP_URL` dan konfigurasi Laragon. User menyebut nama project hosting awal adalah "webprofile".
+-   Setelah semua langkah di atas selesai, aplikasi seharusnya berjalan normal. Tugas selanjutnya adalah melanjutkan dari sini.
+-   Jika ada masalah lagi dengan upload file, langkah pertama yang harus dicek adalah **`APP_URL` di `.env`** dan **symlink storage**.

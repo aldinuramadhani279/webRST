@@ -1,0 +1,59 @@
+Role: Senior Laravel Architect.
+Context: Kita sedang membangun Website Profil Rumah Sakit. Project sudah terinstall Laravel 11.
+Task: Buatkan Kode Migrations dan Models lengkap dengan Relasi (Eloquent Relationships).
+
+Spesifikasi Tabel Database:
+1. `specializations`: id, name, icon (string/nullable), timestamps.
+2. `doctors`: id, specialization_id (FK), name, sip_number, bio (text), photo (string/nullable), is_active (boolean), timestamps.
+3. `schedules`: id, doctor_id (FK), day (enum: Senin-Minggu), start_time, end_time, timestamps.
+4. `services`: id, title, slug, category (enum: 'rawat_jalan', 'rawat_inap', 'penunjang'), content (longtext), image, timestamps.
+5. `articles`: id, title, slug, content (longtext), thumbnail, status (enum: draft, published), published_at, timestamps.
+6. `settings`: id, key (unique), value (text), type (text), timestamps.
+
+Requirements:
+- Berikan kode file Migration lengkap untuk semua tabel di atas.
+- Berikan kode Model lengkap.
+- Pada Model `Doctor`, tambahkan relasi `belongsTo` ke Specialization dan `hasMany` ke Schedules.
+- Pada Model `Specialization`, tambahkan relasi `hasMany` ke Doctor.
+- Gunakan $guarded = [] pada setiap model agar mass assignment aman di tahap dev.
+
+Output: Hanya kode Migration dan Model.
+
+Role: FilamentPHP Expert (v3).
+Context: Database dan Model sudah siap. Sekarang kita butuh Admin Panel menggunakan Filament.
+Task: Buatkan konfigurasi `schema` (Form) dan `table` (Datatable) untuk Resource Filament.
+
+Target Resources:
+1. **DoctorResource**:
+   - Form: Nama, Pilih Spesialisasi (Select relationship), SIP, Bio (RichEditor), Foto (FileUpload), Toggle Aktif.
+   - Table: Kolom Nama, Spesialisasi, Foto (ImageColumn), Status.
+2. **ScheduleResource**:
+   - Form: Pilih Dokter, Hari (Select), Jam Mulai & Selesai (TimePicker).
+   - Table: Nama Dokter, Hari, Jam.
+3. **ServiceResource**:
+   - Form: Judul, Kategori (Select), Konten (RichEditor), Gambar.
+4. **ArticleResource**:
+   - Form: Judul, Slug (Auto generate from title), Konten, Status, Tanggal Publish.
+
+Requirements:
+- Gunakan syntax Filament v3 terbaru.
+- Berikan hanya bagian method `form(Form $form)` dan `table(Table $table)` untuk masing-masing Resource agar saya bisa copy-paste ke file Resource yang saya generate nanti.
+- Sertakan `use` statement yang diperlukan (misal: Components\TextInput, Columns\TextColumn).
+
+Role: Laravel Frontend Developer (Blade + Tailwind).
+Context: Backend dan Data sudah siap. Sekarang buat tampilan depan.
+Task: Buatkan Controller dan Views sederhana.
+
+Requirements:
+1. **HomeController**:
+   - Method `index`: Ambil 6 layanan unggulan, 3 artikel terbaru, dan list semua spesialisasi.
+2. **DoctorController**:
+   - Method `index`: Tampilkan semua dokter dengan pagination (support filter by specialization_id).
+   - Method `show`: Detail dokter beserta jadwal praktiknya.
+
+3. **Views (Blade Structure)**:
+   - Buat kerangka `layouts/app.blade.php` dengan Navbar dan Footer sederhana (gunakan Tailwind utility classes).
+   - Buat `home.blade.php`: Tampilkan Hero section, Grid Layanan, dan Grid Artikel.
+   - Buat `doctors/index.blade.php`: Tampilkan kartu nama dokter + foto.
+
+Output: Kode Controller dan Kode Blade Views. Gunakan Tailwind CSS untuk styling layout (Grid/Flex).

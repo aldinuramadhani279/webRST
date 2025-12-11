@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Gambar</title>
+</head>
+<body>
+    <h1>Test Akses Gambar</h1>
+    
+    <h2>Mencoba mengakses file di public/assets/images/</h2>
+    <p>Gambar yang seharusnya ada:</p>
+    <ul>
+        <li><img src="assets/images/fotonampakdepan.jpg" alt="Foto Nampak Depan - Jika error, file tidak ditemukan" onerror="this.style.display='none'; document.getElementById('error1').style.display='block';"></li>
+        <li id="error1" style="display:none; color:red;">fotonampakdepan.jpg: Tidak ditemukan</li>
+        
+        <li><img src="assets/images/logodiponegoro.png" alt="Logo Diponegoro - Jika error, file tidak ditemukan" onerror="this.style.display='none'; document.getElementById('error2').style.display='block';"></li>
+        <li id="error2" style="display:none; color:red;">logodiponegoro.png: Tidak ditemukan</li>
+        
+        <li><img src="assets/images/logorst.png" alt="Logo RST - Jika error, file tidak ditemukan" onerror="this.style.display='none'; document.getElementById('error3').style.display='block';"></li>
+        <li id="error3" style="display:none; color:red;">logorst.png: Tidak ditemukan</li>
+    </ul>
+    
+    <h2>Membuat dan mengakses placeholder langsung</h2>
+    <p>Jika yang di atas tidak muncul, kita buat di public root:</p>
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNDAwIDIwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM0Yjk4ZjQiLz48dGV4dCB4PSIyMDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5UZXN0IEltYWdlIEZpbGU8L3RleHQ+PC9zdmc+" alt="Placeholder SVG">
+</body>
+</html>

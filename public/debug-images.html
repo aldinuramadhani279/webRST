@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Image Access</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-box { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .image-container { width: 300px; height: 200px; border: 1px solid #999; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Debug: Testing Image Access</h1>
+    
+    <div class="test-box">
+        <h2>Test 1: Direct access to placeholder in storage via /storage/ URL</h2>
+        <div class="image-container">
+            <img src="/storage/placeholders/fotonampakdepan.jpg" alt="Storage placeholder" onerror="console.log('Error loading storage placeholder'); this.style.border='2px solid red';" onload="this.style.border='2px solid green';">
+        </div>
+        <p>Expected path: /storage/placeholders/fotonampakdepan.jpg</p>
+    </div>
+
+    <div class="test-box">
+        <h2>Test 2: Background-image CSS approach</h2>
+        <div class="image-container" style="background-image: url('/storage/placeholders/fotonampakdepan.jpg'); background-size: cover; background-position: center;"></div>
+        <p>Using CSS background-image property</p>
+    </div>
+
+    <div class="test-box">
+        <h2>Test 3: Other placeholder images</h2>
+        <div style="display: flex; gap: 10px;">
+            <div class="image-container" style="width: 150px;">
+                <img src="/storage/placeholders/logodiponegoro.png" alt="Logo 1" onerror="this.style.border='2px solid red';" onload="this.style.border='2px solid green';">
+            </div>
+            <div class="image-container" style="width: 150px;">
+                <img src="/storage/placeholders/logorst.png" alt="Logo 2" onerror="this.style.border='2px solid red';" onload="this.style.border='2px solid green';">
+            </div>
+        </div>
+    </div>
+
+    <div class="test-box">
+        <h2>Test 4: Direct file access (public directory)</h2>
+        <p>Try placing an image in public directory and access via /assets/images/</p>
+        <div class="image-container">
+            <img src="/assets/images/fotonampakdepan.jpg" alt="Public directory image" onerror="this.style.border='2px solid red';">
+        </div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Test 5: SVG placeholder as backup</h2>
+        <div class="image-container" style="background: linear-gradient(135deg, #3b82f6, #1e40af); display: flex; align-items: center; justify-content: center; color: white;">
+            FALLBACK IMAGE
+        </div>
+        <p>Display when image fails to load</p>
+    </div>
+</body>
+</html>
