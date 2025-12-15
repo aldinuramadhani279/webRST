@@ -92,3 +92,67 @@ Ini adalah panduan untuk dieksekusi di komputer kantor.
 -   Tanyakan pada user nama folder/domain yang akan digunakan di komputer kantor agar bisa menyesuaikan `APP_URL` dan konfigurasi Laragon. User menyebut nama project hosting awal adalah "webprofile".
 -   Setelah semua langkah di atas selesai, aplikasi seharusnya berjalan normal. Tugas selanjutnya adalah melanjutkan dari sini.
 -   Jika ada masalah lagi dengan upload file, langkah pertama yang harus dicek adalah **`APP_URL` di `.env`** dan **symlink storage**.
+
+---
+
+## 4. Log dan Solusi Masalah Saat Deployment di Komputer Kantor (Sesi 12 Desember 2025)
+
+Bagian ini merangkum proses deployment pertama kali di komputer kantor, termasuk masalah yang ditemukan dan solusinya.
+
+### 4.1. Masalah Awal: Perintah `php` dan `composer` tidak ditemukan
+-   **Problem**: Saat menjalankan `composer install` atau `php artisan`, terminal memberikan error "command not found".
+-   **Penyebab**: Path ke executable PHP dan Composer tidak terdaftar di variabel lingkungan (PATH) sistem Windows.
+
+### 4.2. Solusi Sementara: Menggunakan Executable PHP Langsung
+-   **Workaround**: Ditemukan path ke PHP yang berfungsi, yaitu `C:\php82\php.exe`. Seluruh proses setup di baris perintah (CLI) dilanjutkan menggunakan path ini.
+-   **Langkah yang Berhasil Dilakukan**:
+    1.  Menjalankan skrip pasca-instalasi Composer secara manual (`php artisan filament:upgrade` dan `vendor:publish`).
+    2.  Menginstal dependensi frontend (`npm install` dan `npm run build`).
+    3.  Membuat file `.env` dan menghasilkan `APP_KEY`.
+    4.  Mengkonfigurasi `.env` dengan database `webrst` dan `APP_URL=http://127.0.0.1:8000`.
+    5.  Membuat symbolic link dengan `php artisan storage:link`.
+    6.  Membersihkan cache dengan `php artisan optimize:clear`.
+
+### 4.3. Masalah Utama: Error 404 di Browser (Ketidakcocokan Versi PHP)
+-   **Problem**: Meskipun setup via CLI berhasil, saat situs diakses melalui browser, muncul error 404 atau error server lainnya.
+-   **Penyebab**: Ditemukan bahwa **server Apache (dari XAMPP)** dikonfigurasi untuk menggunakan **PHP versi 5.6.40**, yang sama sekali tidak kompatibel dengan proyek Laravel 10 yang membutuhkan **PHP 8.1+**.
+
+### 4.4. Solusi Final yang Direkomendasikan
+-   **Solusi**: Melakukan instalasi ulang XAMPP secara bersih untuk memastikan semua komponen (Apache, PHP, MySQL) modern dan kompatibel.
+-   **Rencana Aksi**:
+    1.  **Backup**: Cadangkan file proyek dan database.
+    2.  **Instalasi Ulang**: Uninstall XAMPP lama, lalu install versi baru yang menyertakan PHP 8.1+.
+    3.  **Restore**: Kembalikan file proyek dan impor database.
+    4.  **Konfigurasi**: Atur **Virtual Host** di Apache agar domain lokal (cth: `webrst.test`) menunjuk ke folder `public` dari proyek Laravel.
+
+---
+
+## 5. Log dan Solusi Lanjutan (Sesi Setelahnya)
+
+### 5.1. Diagnosis Masalah
+-   **Problem**: Setelah setup awal, perintah `php artisan` gagal dengan `Fatal Error`.
+-   **Penyebab**: Ditemukan adanya dua versi PHP yang berbeda. Perintah `composer update` dijalankan menggunakan PHP 8.5, yang meng-upgrade dependensi proyek ke versi yang lebih baru. Namun, server XAMPP dan PHP default di sistem menggunakan PHP 8.2. Versi ini tidak memenuhi syarat minimal (`>=8.4`) dari dependensi yang baru, sehingga menyebabkan error.
+-   **Solusi Final**: Mengikuti rekomendasi awal (4.4), yaitu melakukan instalasi ulang XAMPP ke versi yang lebih modern untuk menyatukan lingkungan PHP.
+
+### 5.2. Rencana Aksi (Setelah Instalasi Ulang XAMPP)
+
+Setelah Anda berhasil menginstal ulang XAMPP dengan versi yang menyertakan **PHP 8.4 atau lebih tinggi**, ikuti langkah-langkah berikut untuk melanjutkan deployment:
+
+1.  **Pastikan Proyek Ada**: Pastikan folder proyek `webRST` berada di `C:\xampp\htdocs\`.
+2.  **Buka Terminal**: Buka terminal baru di dalam direktori `C:\xampp\htdocs\webRST`.
+3.  **Buat Database**: Buka phpMyAdmin (atau HeidiSQL), buat database kosong baru dengan nama `webrst`.
+4.  **Impor Database**: Impor file `webrst.sql` ke dalam database `webrst` yang baru Anda buat.
+5.  **Install Dependensi PHP**: Jalankan perintah berikut. Ini seharusnya berjalan lancar sekarang karena versi PHP Anda sudah sesuai.
+    ```bash
+    composer install
+    ```
+6.  **Buat Symlink Storage**:
+    ```bash
+    php artisan storage:link
+    ```
+7.  **Bersihkan Cache**:
+    ```bash
+    php artisan optimize:clear
+    ```
+8.  **Konfigurasi Apache**: Setelah langkah-langkah di atas berhasil, beri tahu saya. Saya akan memberikan panduan terakhir untuk mengkonfigurasi **Virtual Host** Apache agar domain `https://rstdrasmirsalatiga.co.id` mengarah ke proyek Anda.
+9.  **Restart Apache**: Langkah terakhir adalah me-restart Apache untuk mengaktifkan semua konfigurasi.

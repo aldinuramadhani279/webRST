@@ -1,0 +1,25 @@
+# Kemajuan Debugging Konfigurasi Apache (Web RST)
+
+## Tujuan Utama
+Mengkonfigurasi Apache Virtual Host di XAMPP untuk proyek Laravel `webRST` agar dapat diakses melalui `https://rstdrasmirsalatiga.co.id`.
+
+## Status Saat Ini
+Apache di XAMPP masih gagal start ("Apache shutdown unexpectedly") setelah konfigurasi Virtual Host.
+
+## Langkah-Langkah Troubleshooting yang Telah Dilakukan
+1.  **File `hosts`**: Telah dikonfigurasi dengan benar (`127.0.0.1 rstdrasmirsalatiga.co.id`).
+2.  **Konfigurasi Apache**:
+    *   `C:\xampp\apache\conf\httpd.conf`: `Include conf/extra/httpd-vhosts.conf` telah diaktifkan.
+    *   `C:\xampp\apache\conf\extra\httpd-ssl.conf`: `VirtualHost _default_:443` telah dinonaktifkan (dikomentari).
+    *   `C:\xampp\apache\conf\extra\httpd-vhosts.conf`: Konfigurasi Virtual Host untuk `rstdrasmirsalatiga.co.id` (HTTP redirect ke HTTPS, dan HTTPS) telah ditambahkan dengan benar.
+3.  **Port Conflict**: Hasil Netstat menunjukkan tidak ada program lain yang menggunakan port 80 atau 443.
+4.  **File Sertifikat SSL**: File `fullchain.pem` dan `privkey.pem` telah dikonfirmasi keberadaannya di `C:\xampp\htdocs\webRST\.well-known\`.
+5.  **Log Error Apache (`C:\xampp\apache\logs\error.log`)**:
+    *   Log menunjukkan Apache sebelumnya berhasil "resuming normal operations" pada suatu waktu, namun saat ini log error menjadi **kosong** setelah upaya start yang gagal. Ini mengindikasikan Apache crash sebelum sempat menulis log.
+    *   Log dari XAMPP Control Panel kadang menunjukkan `xampp-control.exe` hang.
+
+## Diagnosis Paling Mungkin (Berdasarkan Log Kosong)
+Apache gagal start karena ada *dependency* (library) yang hilang atau tidak ter-install dengan benar di sistem Windows, yaitu **Microsoft Visual C++ Redistributable**. Apache crash sebelum proses logging dimulai.
+
+## Tugas Selanjutnya / Tindakan Tertunda
+Pengguna perlu mengunduh dan meng-install **Microsoft Visual C++ Redistributable (versi x64 dan x86 terbaru)**, lalu me-restart komputer mereka. Setelah itu, mencoba Start Apache lagi dari XAMPP Control Panel.
