@@ -22,5 +22,6 @@ Route::get('/articles', [ArticleController::class, 'index'])->name('articles.ind
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/services/featured', [ServiceController::class, 'featured'])->name('services.featured');
 Route::get('/services/other', [ServiceController::class, 'other'])->name('services.other');
+Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
 Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('doctors.show');

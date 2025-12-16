@@ -30,4 +30,13 @@ class ServiceController extends Controller
 
         return view('services.other', compact('services'));
     }
+
+    /**
+     * Display the specified service.
+     */
+    public function show(Service $service)
+    {
+        $service->load('images');
+        return view('services.show', compact('service'));
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServiceResource\Pages;
-use App\Filament\Resources\ServiceResource\RelationManagers;
+use App\Filament\Resources\ServiceResource\RelationManagers\ImagesRelationManager;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -60,6 +60,23 @@ class ServiceResource extends Resource
                     ->label('Layanan Utama')
                     ->helperText('Centang jika ini adalah layanan utama yang akan ditampilkan di halaman home')
                     ->default(false),
+
+                Forms\Components\Section::make('Kontak Tambahan')
+                    ->description('Opsional: Tambahkan link kontak untuk layanan ini.')
+                    ->schema([
+                        Forms\Components\Select::make('contact_icon')
+                            ->options([
+                                'whatsapp' => 'WhatsApp',
+                                'instagram' => 'Instagram',
+                                'facebook' => 'Facebook',
+                                'globe' => 'Website',
+                            ])
+                            ->label('Ikon Kontak'),
+                        Forms\Components\TextInput::make('contact_link')
+                            ->label('Link Kontak (URL)')
+                            ->placeholder('Contoh: https://wa.me/62... atau https://www.instagram.com/...')
+                            ->url(),
+                    ]),
             ]);
     }
 
@@ -116,7 +133,7 @@ class ServiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ImagesRelationManager::class,
         ];
     }
 

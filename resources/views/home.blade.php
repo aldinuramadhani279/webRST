@@ -2,9 +2,9 @@
 
 @section('content')
     {{-- Hero Section --}}
-    <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-auto my-8 border-4 border-white shadow-lg">
+    <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-auto mt-6 mb-8 border-4 border-white shadow-lg">
         <!-- Background Image -->
-        <img src="{{ asset('assets/images/bannerbaru.jpg') }}"
+        <img src="{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}"
              alt="Banner RST dr Asmir"
              class="w-full h-auto object-cover">
 
@@ -12,28 +12,31 @@
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="text-center text-white p-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">Selamat Datang di RST dr Asmir Salatiga</h1>
-                <p class="text-lg md:text-xl">Melayani dengan Hati, Profesional dan Terpercaya</p>
+                <p class="text-lg md:text-xl mb-8">Melayani dengan Hati, Profesional dan Terpercaya</p>
+                <a href="{{ route('doctors.index') }}" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
+                    Lihat Jadwal Dokter
+                </a>
             </div>
         </div>
     </div>
 
     {{-- Services Section --}}
-    <div class="py-16">
+    <div class="pt-10 pb-16">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-8">Layanan Unggulan</h2>
             <!-- Scrollable container -->
             <div class="flex overflow-x-auto space-x-8 snap-x snap-mandatory pb-4">
                 @foreach($services as $service)
                     <!-- Service Card -->
-                    <div class="snap-start w-80 md:w-96 flex-shrink-0">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 h-full">
-                            <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="w-full h-48 object-cover">
+                    <a href="{{ route('services.show', $service) }}" class="snap-start w-72 md:w-80 flex-shrink-0 block">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl h-full border border-gray-200">
+                            <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="w-full h-40 object-cover">
                             <div class="p-6">
                                 <h3 class="text-xl font-bold mb-2">{{ $service->title }}</h3>
                                 <p class="text-gray-600">{{ Str::limit(strip_tags($service->content), 100) }}</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>
@@ -49,7 +52,7 @@
                     $doctors = \App\Models\Doctor::with('specialization')->where('is_active', true)->inRandomOrder()->take(4)->get();
                 @endphp
                 @foreach($doctors as $doctor)
-                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <a href="{{ route('doctors.show', $doctor) }}" class="block bg-white rounded-lg shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200">
                         @if($doctor->photo && file_exists(public_path('uploads/' . $doctor->photo)))
                             <img src="{{ asset('uploads/' . $doctor->photo) }}"
                                  alt="{{ $doctor->name }}"
@@ -62,7 +65,7 @@
                         @endif
                         <h3 class="text-lg font-semibold">{{ $doctor->name }}</h3>
                         <p class="text-gray-600 text-sm">{{ $doctor->specialization->name }}</p>
-                    </div>
+                    </a>
                 @endforeach
             </div>
             <div class="text-center mt-8">
@@ -77,13 +80,13 @@
             <h2 class="text-3xl font-bold text-center mb-8">Artikel Terbaru</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($articles as $article)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        <img src="{{ asset('uploads/' . $article->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
+                    <a href="{{ route('articles.show', $article) }}" class="block bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200">
+                        <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-bold mb-2">{{ $article->title }}</h3>
                             <p class="text-gray-600">{{ Str::limit(strip_tags($article->content), 100) }}</p>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArticleResource\Pages;
-use App\Filament\Resources\ArticleResource\RelationManagers;
+use App\Filament\Resources\ArticleResource\RelationManagers\ImagesRelationManager;
 use App\Models\Article;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -39,7 +39,7 @@ class ArticleResource extends Resource
                     ->required()
                     ->unique(Article::class, 'slug', ignoreRecord: true),
                 RichEditor::make('content')->required(),
-                FileUpload::make('thumbnail')->required(),
+                FileUpload::make('image')->required(),
                 Select::make('status')
                     ->options([
                         'draft' => 'Draft',
@@ -47,6 +47,23 @@ class ArticleResource extends Resource
                     ])
                     ->required(),
                 DateTimePicker::make('published_at'),
+
+                Forms\Components\Section::make('Kontak Tambahan')
+                    ->description('Opsional: Tambahkan link kontak untuk artikel ini.')
+                    ->schema([
+                        Forms\Components\Select::make('contact_icon')
+                            ->options([
+                                'whatsapp' => 'WhatsApp',
+                                'instagram' => 'Instagram',
+                                'facebook' => 'Facebook',
+                                'globe' => 'Website',
+                            ])
+                            ->label('Ikon Kontak'),
+                        Forms\Components\TextInput::make('contact_link')
+                            ->label('Link Kontak (URL)')
+                            ->placeholder('Contoh: https://wa.me/62... atau https://www.instagram.com/...')
+                            ->url(),
+                    ]),
             ]);
     }
 
@@ -54,7 +71,7 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail')->disk('public'),
+                ImageColumn::make('image')->disk('public'),
                 TextColumn::make('title')->searchable()->sortable(),
                 TextColumn::make('slug')->searchable(),
                 TextColumn::make('status')->sortable(),
@@ -76,7 +93,7 @@ class ArticleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ImagesRelationManager::class,
         ];
     }
 

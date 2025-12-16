@@ -19,4 +19,9 @@ class Service extends Model
     {
         return 'slug';
     }
+
+    public function images()
+    {
+        return $this->hasMany(ServiceImage::class);
+    }
 }

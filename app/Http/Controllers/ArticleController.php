@@ -26,6 +26,7 @@ class ArticleController extends Controller
             abort(404);
         }
 
+        $article->load('images'); // Eager load the images relationship
         return view('articles.show', compact('article'));
     }
 }

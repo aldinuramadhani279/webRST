@@ -13,6 +13,8 @@
 5. Perubahan pada Layanan (Fitur Dropdown)
 6. Error dan Solusi
 7. Status Penyelesaian
+8. Perbaikan Sesi Lanjutan (11 Desember 2025)
+9. Peningkatan Fitur Lanjutan (16 Desember 2025)
 
 ---
 
@@ -265,3 +267,58 @@
 - **Slider Layanan**: Mengubah tampilan "Layanan Unggulan" di homepage menjadi slider horizontal.
 - **Dropdown Klik**: Mengubah dropdown "Layanan" di navigasi dari hover menjadi klik menggunakan Alpine.js untuk pengalaman pengguna yang lebih baik.
 - **Status**: ✅ DITERAPKAN
+
+---
+
+## 9. Peningkatan Fitur Lanjutan (16 Desember 2025)
+
+### 9.1 Pengaturan Situs Terpusat (CMS)
+- **Deskripsi**: Menambahkan halaman "Site Settings" baru di panel admin Filament untuk memungkinkan admin mengelola konten global dengan mudah.
+- **Fitur**:
+    -   Mengubah nomor telepon IGD.
+    -   Mengganti logo website.
+    -   Mengganti gambar banner utama di halaman home.
+- **File Terpengaruh**:
+    -   `app/Filament/Pages/SiteSettings.php`
+    -   `app/Models/Setting.php`
+    -   `app/Providers/ViewServiceProvider.php`
+    -   `resources/views/layouts/app.blade.php` (untuk menampilkan data)
+    -   `resources/views/home.blade.php` (untuk menampilkan data)
+- **Status**: ✅ DITERAPKAN
+
+### 9.2 Peningkatan Tampilan (UI/UX)
+- **Deskripsi**: Melakukan serangkaian perbaikan pada antarmuka untuk meningkatkan pengalaman pengguna.
+- **Perubahan**:
+    -   **Navbar**: Didesain ulang agar lebih tegas, dengan penambahan efek "active state" (penanda halaman aktif) dan efek hover yang lebih jelas pada menu.
+    -   **Tombol IGD**: Diubah menjadi link WhatsApp dan digabungkan dengan navigasi utama agar lebih bersih.
+    -   **Kartu Konten**: Kartu untuk Layanan, Dokter, dan Artikel di halaman utama diberi bingkai (border) dan dibuat bisa di-klik untuk navigasi ke halaman detail.
+- **File Terpengaruh**:
+    -   `resources/views/layouts/app.blade.php`
+    -   `resources/views/home.blade.php`
+- **Status**: ✅ DITERAPKAN
+
+### 9.3 Fitur Galeri & Kontak (Layanan & Artikel)
+- **Deskripsi**: Menambahkan fungsionalitas baru pada modul Layanan dan Artikel agar lebih dinamis.
+- **Struktur Database**:
+    -   Menambahkan tabel `service_images` dan `article_images` untuk mendukung galeri foto.
+    -   Menambahkan kolom `contact_link` dan `contact_icon` pada tabel `services` dan `articles`.
+- **Fitur CMS**:
+    -   Pada halaman edit Layanan & Artikel di CMS, ditambahkan bagian "Kontak Tambahan" untuk mengisi URL dan memilih ikon kontak (WhatsApp, IG, dll).
+    -   Di bawah form utama, ditambahkan tabel untuk mengelola (upload/hapus) banyak gambar untuk galeri.
+- **Frontend**:
+    -   Membuat halaman detail untuk Layanan.
+    -   Halaman detail Layanan dan Artikel sekarang menampilkan galeri foto dan tombol kontak tambahan jika data diisi dari CMS.
+- **File Terpengaruh**:
+    -   `app/Filament/Resources/ServiceResource.php`
+    -   `app/Filament/Resources/ArticleResource.php`
+    -   `app/Http/Controllers/ServiceController.php`
+    -   `app/Http/Controllers/ArticleController.php`
+    -   `resources/views/services/show.blade.php`
+    -   `resources/views/articles/show.blade.php`
+    -   Model & Migrasi terkait.
+- **Status**: ✅ DITERAPKAN
+
+### 9.4 Perbaikan Bug Internal CMS
+- **Deskripsi**: Mengatasi error `RouteNotFoundException` yang terjadi pada resource `Services` dan `Articles` di panel admin.
+- **Solusi**: Error disebabkan karena file-file standar untuk halaman CMS (List, Create, Edit) tidak ada. Solusinya adalah dengan membuat ulang file-file yang hilang tersebut untuk kedua resource dan memastikan file utama resource merujuk pada file-file tersebut dengan benar.
+- **Status**: ✅ DIPERBAIKI
