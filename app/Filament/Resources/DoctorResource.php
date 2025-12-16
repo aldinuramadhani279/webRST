@@ -20,11 +20,14 @@ use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
+
 class DoctorResource extends Resource
 {
     protected static ?string $model = Doctor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group'; // Changed icon for better representation
 
     public static function form(Form $form): Form
     {
@@ -33,14 +36,17 @@ class DoctorResource extends Resource
                 TextInput::make('name')->required(),
                 Select::make('specialization_id')
                     ->relationship('specialization', 'name')
+                    ->searchable() // Make it searchable
+                    ->preload()    // Preload options
                     ->required(),
                 TextInput::make('sip_number')->required(),
-                RichEditor::make('bio')->required(),
+                RichEditor::make('bio')->columnSpanFull()->required(),
                 FileUpload::make('photo')
                     ->image()
-                    ->disk('public') // Explicitly use the 'public' disk
-                    ->maxSize(2048) // Maksimal 2MB
-                    ->directory('doctors'),
+                    ->disk('public')
+                    ->maxSize(2048)
+                    ->directory('doctors')
+                    ->columnSpanFull(),
                 Toggle::make('is_active')->required(),
             ]);
     }
@@ -49,13 +55,16 @@ class DoctorResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('specialization.name'),
-                ImageColumn::make('photo')->disk('public'),
-                TextColumn::make('is_active'),
+                TextColumn::make('name')->sortable()->searchable(),
+                TextColumn::make('specialization.name')->sortable()->searchable(),
+                ImageColumn::make('photo')->disk('public')->circular(),
+                ToggleColumn::make('is_active')->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('specialization')
+                    ->relationship('specialization', 'name')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
