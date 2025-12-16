@@ -18,7 +18,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         @forelse($doctors as $doctor)
             <a href="{{ route('doctors.show', $doctor) }}" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300">
-                <img src="{{ asset('uploads/' . $doctor->photo) }}" alt="{{ $doctor->name }}" class="w-full h-64 object-cover">
+                <img src="{{ asset('storage/' . $doctor->photo) }}" alt="{{ $doctor->name }}" class="w-full h-64 object-cover">
                 <div class="p-4">
                     <h3 class="text-xl font-bold">{{ $doctor->name }}</h3>
                     <p class="text-gray-600">{{ $doctor->specialization->name }}</p>

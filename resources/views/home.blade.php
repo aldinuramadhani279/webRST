@@ -53,8 +53,8 @@
                 @endphp
                 @foreach($doctors as $doctor)
                     <a href="{{ route('doctors.show', $doctor) }}" class="block bg-white rounded-lg shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200">
-                        @if($doctor->photo && file_exists(public_path('uploads/' . $doctor->photo)))
-                            <img src="{{ asset('uploads/' . $doctor->photo) }}"
+                        @if($doctor->photo)
+                            <img src="{{ asset('storage/' . $doctor->photo) }}"
                                  alt="{{ $doctor->name }}"
                                  class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
                         @else
