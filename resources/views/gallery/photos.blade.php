@@ -23,16 +23,4 @@
         </div>
     @endforelse
 </div>
-
-@push('scripts')
-<!-- I'm adding FancyBox for a better gallery viewing experience. I'll need to add the CDN links to the main layout file. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        Fancybox.bind("[data-fancybox]", {
-            // Your custom options
-        });
-    });
-</script>
-@endpush
+@endsection

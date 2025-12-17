@@ -17,11 +17,11 @@
                 @endphp
 
                 @if($youtubeId)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
+                    <div class="group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
                         <a href="{{ $video->youtube_link }}" target="_blank" rel="noopener noreferrer">
                             <div class="relative">
                                 <img src="https://img.youtube.com/vi/{{ $youtubeId }}/hqdefault.jpg" alt="{{ $video->title }}" class="w-full h-48 object-cover">
-                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
                                 </div>
                             </div>
