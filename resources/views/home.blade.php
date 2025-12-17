@@ -12,7 +12,7 @@
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="text-center text-white p-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">Selamat Datang di RST dr Asmir Salatiga</h1>
-                <p class="text-lg md:text-xl mb-8">Melayani dengan Hati, Profesional dan Terpercaya</p>
+                <p class="text-lg md:text-xl mb-8">kami melayani dengan hati, Profesional dan Terpercaya</p>
                 <a href="{{ route('doctors.index') }}" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
                     Lihat Jadwal Dokter
                 </a>
