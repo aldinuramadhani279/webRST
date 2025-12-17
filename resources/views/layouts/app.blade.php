@@ -6,6 +6,7 @@
     <title>RST dr Asmir Salatiga</title>
     <link rel="icon" href="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100">
@@ -36,6 +37,17 @@
                         </div>
                     </div>
                     <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->routeIs('articles.index') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">Artikel</a>
+                    <!-- Dropdown Galeri -->
+                    <div x-data="{ open: false }" @click.away="open = false" class="relative">
+                        <button @click="open = !open" class="flex items-center w-full px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->routeIs('gallery.photos') || request()->routeIs('gallery.videos') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                            <span>Galeri</span>
+                            <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1">
+                            <a href="{{ route('gallery.photos') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Foto</a>
+                            <a href="{{ route('gallery.videos') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Video</a>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Contact Button (Single WhatsApp) -->
@@ -78,5 +90,13 @@
             &copy; {{ date('Y') }} RST dr Asmir Salatiga. All rights reserved.
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Fancybox.bind("[data-fancybox]", {
+                // Your custom options
+            });
+        });
+    </script>
 </body>
 </html>
