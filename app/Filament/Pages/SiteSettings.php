@@ -41,12 +41,18 @@ class SiteSettings extends Page implements HasForms
                 FileUpload::make('logo')
                     ->label('Site Logo')
                     ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios(['1:1', '4:3']) // Square and standard
+                    ->imageCropAspectRatio('1:1')
                     ->directory('settings')
                     ->disk('public'),
 
                 FileUpload::make('banner_image')
                     ->label('Homepage Banner')
                     ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios(['16:9', '4:3']) // Wide and standard
+                    ->imageCropAspectRatio('16:9')
                     ->directory('settings')
                     ->disk('public'),
             ])

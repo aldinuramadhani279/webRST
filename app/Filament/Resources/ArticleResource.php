@@ -38,8 +38,19 @@ class ArticleResource extends Resource
                 TextInput::make('slug')
                     ->required()
                     ->unique(Article::class, 'slug', ignoreRecord: true),
-                RichEditor::make('content')->required(),
-                FileUpload::make('image')->required(),
+                RichEditor::make('content')->required()->columnSpanFull(),
+                FileUpload::make('image')
+                    ->required()
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->imageCropAspectRatio('16:9') // Default to a wide aspect ratio for article images
+                    ->disk('public') // Ensure public disk is used
+                    ->directory('articles'), // Save to a specific directory
                 Select::make('status')
                     ->options([
                         'draft' => 'Draft',

@@ -43,6 +43,13 @@ class DoctorResource extends Resource
                 RichEditor::make('bio')->columnSpanFull()->required(),
                 FileUpload::make('photo')
                     ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->imageCropAspectRatio('1:1')
                     ->disk('public')
                     ->maxSize(2048)
                     ->directory('doctors')
