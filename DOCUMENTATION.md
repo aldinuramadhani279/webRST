@@ -332,3 +332,28 @@
     1.  Menyamakan `APP_URL` di file `.env` agar **sesuai persis** dengan domain utama yang digunakan saat mengakses situs, yaitu versi tanpa `www` (`https://rstdrasmirsalatiga.co.id`).
     2.  Membersihkan cache konfigurasi, view, dan optimisasi Laravel menggunakan perintah `php artisan optimize:clear`, `config:clear`, dan `view:clear` agar perubahan pada `.env` dapat langsung diterapkan oleh aplikasi.
 - **Status**: ✅ DIPERBAIKI
+
+### 9.6 Fitur Galeri Foto & Video
+- **Deskripsi**: Menambahkan modul galeri baru untuk mengelola foto dan video secara terpisah.
+- **Struktur Database**:
+    -   Membuat tabel `albums` untuk mengelompokkan foto.
+    -   Membuat tabel `photos` untuk menyimpan data setiap foto.
+    -   Membuat tabel `videos` untuk menyimpan data video dari YouTube.
+- **Fitur CMS**:
+    -   Menambahkan grup navigasi "Galeri" di sidebar admin.
+    -   Menambahkan resource `Album` untuk membuat dan mengelola album foto.
+    -   Menambahkan resource `Photo` untuk mengupload foto, lengkap dengan fitur *image editor* untuk cropping, dan mengelompokkannya ke dalam album.
+    -   Menambahkan resource `Video` untuk menambahkan video dengan hanya menempelkan link dari YouTube.
+- **Frontend**:
+    -   Menambahkan menu dropdown "Galeri" di navigasi utama dengan link ke halaman "Foto" dan "Video".
+    -   Membuat halaman `/gallery/photos` yang menampilkan semua foto, dikelompokkan berdasarkan albumnya.
+    -   Membuat halaman `/gallery/videos` yang menampilkan semua video dari YouTube, lengkap dengan thumbnail yang diambil secara otomatis dari link.
+- **File Terpengaruh**:
+    -   `app/Models/{Album,Photo,Video}.php`
+    -   `database/migrations/*_{albums,photos,videos}_table.php`
+    -   `app/Filament/Resources/{Album,Photo,Video}Resource.php`
+    -   `app/Http/Controllers/GalleryController.php`
+    -   `routes/web.php`
+    -   `resources/views/gallery/{photos,videos}.blade.php`
+    -   `resources/views/layouts/app.blade.php`
+- **Status**: ✅ DITERAPKAN
