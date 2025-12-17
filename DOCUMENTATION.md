@@ -322,3 +322,13 @@
 - **Deskripsi**: Mengatasi error `RouteNotFoundException` yang terjadi pada resource `Services` dan `Articles` di panel admin.
 - **Solusi**: Error disebabkan karena file-file standar untuk halaman CMS (List, Create, Edit) tidak ada. Solusinya adalah dengan membuat ulang file-file yang hilang tersebut untuk kedua resource dan memastikan file utama resource merujuk pada file-file tersebut dengan benar.
 - **Status**: ✅ DIPERBAIKI
+
+### 9.5 Perbaikan Bug Upload & Paginasi CMS
+- **Deskripsi Error**:
+    -   **Upload Gambar**: Saat mengupload gambar di CMS, proses macet dengan status "waiting for size..." secara terus-menerus.
+    -   **Paginasi Halaman**: Saat berpindah halaman di daftar data (misal: dari halaman 1 ke 2), layar menjadi gelap (overlay hitam) dan tidak bisa digunakan sampai di-refresh manual.
+- **Analisis Akar Masalah**: Kedua error ini disebabkan oleh masalah yang sama, yaitu **konflik Cross-Origin / Mixed Content**. Hal ini terjadi karena ada ketidakcocokan antara URL yang diakses di browser (misal: `https://rstdrasmirsalatiga.co.id`) dengan `APP_URL` yang dikonfigurasi di file `.env` (misal: `https://www.rstdrasmirsalatiga.co.id`). Browser modern memblokir permintaan AJAX (yang digunakan oleh Filament untuk upload dan paginasi) jika domainnya tidak sama persis, demi keamanan.
+- **Solusi**:
+    1.  Menyamakan `APP_URL` di file `.env` agar **sesuai persis** dengan domain utama yang digunakan saat mengakses situs, yaitu versi tanpa `www` (`https://rstdrasmirsalatiga.co.id`).
+    2.  Membersihkan cache konfigurasi, view, dan optimisasi Laravel menggunakan perintah `php artisan optimize:clear`, `config:clear`, dan `view:clear` agar perubahan pada `.env` dapat langsung diterapkan oleh aplikasi.
+- **Status**: ✅ DIPERBAIKI
