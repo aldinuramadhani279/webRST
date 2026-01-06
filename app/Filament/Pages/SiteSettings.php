@@ -6,12 +6,14 @@ use App\Models\Setting;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
@@ -69,6 +71,24 @@ class SiteSettings extends Page implements HasForms
                             ->directory('settings')
                             ->disk('public'),
                     ])->columns(2),
+
+                Section::make('Tentang Kami (About Us)')
+                    ->description('Pengaturan konten untuk bagian "Tentang Kami" di halaman utama.')
+                    ->icon('heroicon-o-information-circle')
+                    ->schema([
+                        TextInput::make('about_us_title')
+                            ->label('Judul'),
+                        Textarea::make('about_us_subtitle')
+                            ->label('Subjudul/Deskripsi Singkat'),
+                        RichEditor::make('about_us_content')
+                            ->label('Konten Lengkap'),
+                        FileUpload::make('about_us_image')
+                            ->label('Gambar')
+                            ->image()
+                            ->imageEditor()
+                            ->directory('settings')
+                            ->disk('public'),
+                    ])->columns(1),
 
                 Section::make('Logo Partner / Mitra')
                     ->description('Upload logo-logo mitra/partner yang akan ditampilkan di halaman utama')
@@ -147,6 +167,13 @@ class SiteSettings extends Page implements HasForms
                         Repeater::make('emergency_numbers')
                             ->label('Daftar Nomor')
                             ->schema([
+                                Forms\Components\Select::make('icon')
+                                    ->options([
+                                        'whatsapp' => 'WhatsApp',
+                                        'phone' => 'Telepon Rumah',
+                                    ])
+                                    ->label('Ikon')
+                                    ->required(),
                                 TextInput::make('label')
                                     ->label('Label')
                                     ->placeholder('Contoh: IGD')
@@ -178,11 +205,14 @@ class SiteSettings extends Page implements HasForms
     {
         $data = $this->form->getState();
 
+        $jsonFields = ['partner_logos', 'emergency_numbers'];
+
         foreach ($data as $key => $value) {
             // Only update the setting if a new value is provided.
             // This prevents overwriting existing images with null when only other fields are updated.
             if ($value !== null) {
-                Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+                $valueToSave = in_array($key, $jsonFields) ? json_encode($value) : $value;
+                Setting::updateOrCreate(['key' => $key], ['value' => $valueToSave]);
             }
         }
 

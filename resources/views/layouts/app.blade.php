@@ -82,14 +82,26 @@
                                     Nomor Darurat
                                 </div>
                                 @foreach($emergencyNumbers as $emergency)
-                                    <a href="https://wa.me/62{{ preg_replace('/[^0-9]/', '', $emergency['number'] ?? '') }}" target="_blank" class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 border-b border-gray-50 last:border-0 group transition-colors">
+                                    @php
+                                        $icon = $emergency['icon'] ?? 'phone'; // Default to 'phone' if not set
+                                        $isWhatsApp = $icon === 'whatsapp';
+                                        $number = $emergency['number'] ?? '';
+                                        $href = $isWhatsApp 
+                                            ? 'https://wa.me/62' . preg_replace('/[^0-9]/', '', $number) 
+                                            : 'tel:' . $number;
+                                    @endphp
+                                    <a href="{{ $href }}" target="{{ $isWhatsApp ? '_blank' : '_self' }}" class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 border-b border-gray-50 last:border-0 group transition-colors">
                                         <div>
                                             <div class="font-bold text-gray-800 text-sm group-hover:text-blue-600">{{ $emergency['label'] ?? 'IGD' }}</div>
                                             <div class="text-xs text-gray-500 flex items-center gap-1">
-                                                {{ $emergency['number'] ?? '' }}
+                                                {{ $number }}
                                             </div>
                                         </div>
-                                        <i class="fab fa-whatsapp text-green-500 text-xl group-hover:scale-110 transition-transform"></i>
+                                        @if($isWhatsApp)
+                                            <i class="fab fa-whatsapp text-green-500 text-xl group-hover:scale-110 transition-transform"></i>
+                                        @else
+                                            <i class="fas fa-phone-alt text-blue-500 text-xl group-hover:scale-110 transition-transform"></i>
+                                        @endif
                                     </a>
                                 @endforeach
                             </div>
@@ -183,15 +195,24 @@
                         <li class="flex justify-between"><span>Administrasi</span><span>{{ $settings['hours_admin'] ?? '08:00 - 16:00' }}</span></li>
                     </ul>
                     <div class="flex gap-3 mt-4">
-                        @if(!empty($settings['facebook_url']))
-                        <a href="{{ $settings['facebook_url'] }}" target="_blank" class="w-9 h-9 bg-gray-700 hover:bg-blue-600 rounded-full flex items-center justify-center transition"><i class="fab fa-facebook-f text-sm"></i></a>
-                        @endif
-                        @if(!empty($settings['instagram_url']))
-                        <a href="{{ $settings['instagram_url'] }}" target="_blank" class="w-9 h-9 bg-gray-700 hover:bg-pink-600 rounded-full flex items-center justify-center transition"><i class="fab fa-instagram text-sm"></i></a>
-                        @endif
-                        @if(!empty($settings['youtube_url']))
-                        <a href="{{ $settings['youtube_url'] }}" target="_blank" class="w-9 h-9 bg-gray-700 hover:bg-red-600 rounded-full flex items-center justify-center transition"><i class="fab fa-youtube text-sm"></i></a>
-                        @endif
+                        @php
+                            $socials = [
+                                'facebook' => ['url' => $settings['facebook_url'] ?? null, 'icon' => 'fab fa-facebook-f', 'hover' => 'hover:bg-blue-600'],
+                                'instagram' => ['url' => $settings['instagram_url'] ?? null, 'icon' => 'fab fa-instagram', 'hover' => 'hover:bg-pink-600'],
+                                'youtube' => ['url' => $settings['youtube_url'] ?? null, 'icon' => 'fab fa-youtube', 'hover' => 'hover:bg-red-600'],
+                            ];
+
+                            foreach ($socials as $social) {
+                                if (!empty($social['url'])) {
+                                    $url = $social['url'];
+                                    // Ensure the URL is absolute
+                                    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+                                        $url = "https://" . $url;
+                                    }
+                                    echo '<a href="' . e($url) . '" target="_blank" class="w-9 h-9 bg-gray-700 ' . e($social['hover']) . ' rounded-full flex items-center justify-center transition"><i class="' . e($social['icon']) . ' text-sm"></i></a>';
+                                }
+                            }
+                        @endphp
                     </div>
                 </div>
             </div>

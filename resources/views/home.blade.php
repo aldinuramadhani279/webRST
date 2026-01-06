@@ -114,37 +114,18 @@
             </div>
         </div>
     </div>
-
     {{-- About Section --}}
-    <div class="py-6 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800">Tentang Kami</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">RST dr Asmir Salatiga adalah rumah sakit yang berkomitmen memberikan pelayanan kesehatan yang terbaik bagi masyarakat dengan didukung oleh tenaga medis yang profesional dan fasilitas yang lengkap.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-heart text-blue-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Pelayanan dengan Hati</h3>
-                    <p class="text-gray-600">Kami selalu melayani pasien dengan penuh kasih sayang dan profesionalisme.</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-user-md text-green-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Tenaga Medis Profesional</h3>
-                    <p class="text-gray-600">Tim dokter dan perawat kami yang berpengalaman siap memberikan perawatan terbaik.</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-hospital text-purple-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Fasilitas Lengkap</h3>
-                    <p class="text-gray-600">Dilengkapi dengan peralatan medis modern untuk menunjang pelayanan kesehatan.</p>
-                </div>
+    @if(!empty($settings['about_us_title']) && !empty($settings['about_us_content']))
+    <div class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-3">{{ $settings['about_us_title'] }}</h2>
+            @if(!empty($settings['about_us_subtitle']))
+                <p class="text-lg text-gray-300 mb-4">{{ $settings['about_us_subtitle'] }}</p>
+            @endif
+            <div class="prose prose-invert max-w-3xl mx-auto">
+                {!! $settings['about_us_content'] !!}
             </div>
         </div>
     </div>
+    @endif
 @endsection
