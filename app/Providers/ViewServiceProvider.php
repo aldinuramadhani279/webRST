@@ -21,7 +21,18 @@ class ViewServiceProvider extends ServiceProvider
     {
         try {
             $settings = cache()->rememberForever('settings', function () {
-                return \App\Models\Setting::all()->pluck('value', 'key');
+                $allSettings = \App\Models\Setting::all()->pluck('value', 'key');
+                
+                // Decode JSON fields
+                $jsonFields = ['partner_logos', 'emergency_numbers'];
+                foreach ($jsonFields as $field) {
+                    if (isset($allSettings[$field])) {
+                        $decoded = json_decode($allSettings[$field], true);
+                        $allSettings[$field] = is_array($decoded) ? $decoded : [];
+                    }
+                }
+                
+                return $allSettings;
             });
             
             \Illuminate\Support\Facades\View::share('settings', $settings);
