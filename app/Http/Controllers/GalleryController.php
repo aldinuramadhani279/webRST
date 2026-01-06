@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Album;
 use App\Models\Video;
-use Illuminate\Http\Request;
 
 class GalleryController extends Controller
 {
@@ -14,6 +13,7 @@ class GalleryController extends Controller
     public function photos()
     {
         $albums = Album::with('photos')->latest()->get();
+
         return view('gallery.photos', compact('albums'));
     }
 
@@ -23,6 +23,7 @@ class GalleryController extends Controller
     public function videos()
     {
         $videos = Video::latest()->get();
+
         return view('gallery.videos', compact('videos'));
     }
 }

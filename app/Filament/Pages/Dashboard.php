@@ -20,7 +20,7 @@ class Dashboard extends BaseDashboard
                         Artisan::call('config:clear');
                         Artisan::call('cache:clear');
                         Artisan::call('view:clear');
-                        
+
                         Notification::make()
                             ->title('Cache Cleared Successfully')
                             ->success()

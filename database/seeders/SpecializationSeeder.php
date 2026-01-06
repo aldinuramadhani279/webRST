@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Specialization;
+use Illuminate\Database\Seeder;
 
 class SpecializationSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class SpecializationSeeder extends Seeder
 
         foreach ($specializations as $specialization) {
             Specialization::firstOrCreate(
-                ['name' => $specialization['name']], 
+                ['name' => $specialization['name']],
                 $specialization
             );
         }

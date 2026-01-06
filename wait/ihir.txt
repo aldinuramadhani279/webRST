@@ -1,0 +1,19 @@
+Bertindaklah sebagai Senior Laravel Architect.
+
+Laporan Situasi Terkini:
+User telah menjalankan caching penuh (`php artisan icons:cache`, `view:cache`, `event:cache`), namun masalah timeout `SortableIterator` saat pagination/filtering di Filament (Livewire) MASIH TERJADI. Environment adalah Localhost Windows (XAMPP).
+
+Analisa Lanjutan & Hipotesis:
+Karena caching view/icon tidak menyelesaikan masalah, bottleneck I/O kemungkinan besar bukan pada Blade/Icon, melainkan pada **Class Autoloading** atau **Debugging Overhead**.
+
+Dugaan kuat saya:
+1. Composer Autoloader bekerja dalam mode default (dinamis), sehingga PHP harus men-scan file system untuk mencari class setiap kali Livewire melakukan hydration/dehydration request.
+2. `APP_DEBUG=true` di .env menyebabkan Laravel mengumpulkan stack trace yang sangat dalam, yang memperparah beban I/O pada Windows.
+
+Tugas Kamu:
+Berikan saya perintah terminal yang tepat untuk:
+1. Melakukan "Optimize Autoloader" pada Composer agar memetakan seluruh class ke dalam satu file (menghilangkan scanning file).
+2. Meminta saya mematikan Debug Mode sepenuhnya di .env.
+3. Membersihkan config cache sekali lagi setelah perubahan tersebut.
+
+Tolong berikan perintahnya sekarang.

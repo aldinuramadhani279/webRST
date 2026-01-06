@@ -10,7 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class ServiceResource extends Resource
 {
@@ -103,6 +102,7 @@ class ServiceResource extends Resource
                             'rawat_inap' => 'Rawat Inap',
                             'penunjang' => 'Penunjang',
                         ];
+
                         return $categories[$state] ?? $state;
                     })
                     ->color('primary')

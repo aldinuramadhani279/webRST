@@ -23,7 +23,7 @@ class ViewServiceProvider extends ServiceProvider
             $settings = cache()->rememberForever('settings', function () {
                 return \App\Models\Setting::all()->pluck('value', 'key');
             });
-            
+
             \Illuminate\Support\Facades\View::share('settings', $settings);
         } catch (\Exception $e) {
             // This is to prevent errors during initial migrations when the settings table might not exist yet.

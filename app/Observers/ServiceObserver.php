@@ -10,7 +10,6 @@ class ServiceObserver
     /**
      * Handle the Service "saved" event.
      *
-     * @param  \App\Models\Service  $service
      * @return void
      */
     public function saved(Service $service)
@@ -23,7 +22,6 @@ class ServiceObserver
     /**
      * Handle the Service "deleted" event.
      *
-     * @param  \App\Models\Service  $service
      * @return void
      */
     public function deleted(Service $service)

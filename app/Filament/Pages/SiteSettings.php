@@ -11,15 +11,17 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Illuminate\Support\Facades\Storage;
 
 class SiteSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+
     protected static string $view = 'filament.pages.site-settings';
+
     protected static ?string $title = 'Site Settings';
+
     protected static ?int $navigationSort = 100;
 
     public ?array $data = [];
@@ -37,7 +39,7 @@ class SiteSettings extends Page implements HasForms
                 TextInput::make('emergency_number')
                     ->label('Emergency Number (UGD)')
                     ->required(),
-                
+
                 FileUpload::make('logo')
                     ->label('Site Logo')
                     ->image()
@@ -68,23 +70,24 @@ class SiteSettings extends Page implements HasForms
         ];
     }
 
-        public function save(): void
-        {
-            $data = $this->form->getState();
-    
-            foreach ($data as $key => $value) {
-                // Only update the setting if a new value is provided.
-                // This prevents overwriting existing images with null when only other fields are updated.
-                if ($value !== null) {
-                    Setting::updateOrCreate(['key' => $key], ['value' => $value]);
-                }
+    public function save(): void
+    {
+        $data = $this->form->getState();
+
+        foreach ($data as $key => $value) {
+            // Only update the setting if a new value is provided.
+            // This prevents overwriting existing images with null when only other fields are updated.
+            if ($value !== null) {
+                Setting::updateOrCreate(['key' => $key], ['value' => $value]);
             }
-            
-            // Clear the settings cache to apply changes immediately
-            cache()->forget('settings');
-    
-            Notification::make()
-                ->title('Settings saved successfully!')
-                ->success()
-                ->send();
-        }}
+        }
+
+        // Clear the settings cache to apply changes immediately
+        cache()->forget('settings');
+
+        Notification::make()
+            ->title('Settings saved successfully!')
+            ->success()
+            ->send();
+    }
+}

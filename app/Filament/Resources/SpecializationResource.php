@@ -10,14 +10,13 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class SpecializationResource extends Resource
 {
     protected static ?string $model = Specialization::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    
+
     protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
@@ -28,7 +27,7 @@ class SpecializationResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->label('Nama Spesialisasi'),
-                    
+
                 Forms\Components\TextInput::make('icon')
                     ->maxLength(255)
                     ->label('Ikon (opsional)')
@@ -43,16 +42,16 @@ class SpecializationResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->label('Nama Spesialisasi'),
-                    
+
                 Tables\Columns\TextColumn::make('icon')
                     ->searchable()
                     ->label('Ikon'),
-                    
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                    
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

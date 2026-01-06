@@ -37,6 +37,7 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         $service->load('images');
+
         return view('services.show', compact('service'));
     }
 }

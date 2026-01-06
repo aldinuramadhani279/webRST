@@ -14,8 +14,8 @@ class DoctorController extends Controller
         $specializationId = $request->input('specialization_id');
 
         $doctors = Doctor::when($specializationId, function ($query) use ($specializationId) {
-                return $query->where('specialization_id', $specializationId);
-            })
+            return $query->where('specialization_id', $specializationId);
+        })
             ->with('specialization') // Eager load already defined in model
             ->simplePaginate(12);
 
@@ -29,6 +29,7 @@ class DoctorController extends Controller
     public function show(Doctor $doctor)
     {
         $doctor->load('schedules');
+
         return view('doctors.show', compact('doctor'));
     }
 }

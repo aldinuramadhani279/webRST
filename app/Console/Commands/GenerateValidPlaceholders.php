@@ -64,7 +64,7 @@ class GenerateValidPlaceholders extends Command
         $textColor = imagecolorallocate($jpgPlaceholder, 255, 255, 255);
 
         // Add text
-        $text = "Foto Nampak Depan RST dr Asmir Salatiga";
+        $text = 'Foto Nampak Depan RST dr Asmir Salatiga';
         $fontSize = 5;
         $textWidth = imagefontwidth($fontSize) * strlen($text);
         $x = (1200 - $textWidth) / 2;
