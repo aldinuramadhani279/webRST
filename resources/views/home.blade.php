@@ -2,28 +2,51 @@
 
 @section('content')
     {{-- Hero Section --}}
-    <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-auto mt-6 mb-8 border-4 border-white shadow-lg">
+    <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-auto mt-4 mb-2 border-4 border-white shadow-lg">
         <!-- Background Image -->
         <img src="{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}"
              alt="Banner RST dr Asmir"
-             class="w-full h-auto object-cover">
+             class="w-full h-full object-cover">
 
         <!-- Overlay -->
-        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
             <div class="text-center text-white p-4">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">Selamat Datang di RST dr Asmir Salatiga</h1>
-                <p class="text-lg md:text-xl mb-8">kami melayani dengan hati, Profesional dan Terpercaya</p>
-                <a href="{{ route('doctors.index') }}" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
+                <h1 class="text-3xl md:text-5xl font-bold mb-2">Selamat Datang di RST dr Asmir Salatiga</h1>
+                <p class="text-lg md:text-xl mb-6">kami melayani dengan hati, Profesional dan Terpercaya</p>
+                <a href="{{ route('doctors.index') }}" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
                     Lihat Jadwal Dokter
                 </a>
             </div>
         </div>
     </div>
 
+    {{-- Partner Logos Section --}}
+    @php
+        $partnerLogos = $settings['partner_logos'] ?? [];
+        // Fallback: decode if it's a JSON string (handling stale cache or provider miss)
+        if (!is_array($partnerLogos) && is_string($partnerLogos)) {
+            $partnerLogos = json_decode($partnerLogos, true);
+        }
+    @endphp
+    @if(is_array($partnerLogos) && count($partnerLogos) > 0)
+    <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100">
+        <div class="flex items-center justify-center flex-wrap gap-6">
+            @foreach($partnerLogos as $partner)
+                <div class="flex flex-col items-center group">
+                    <img src="{{ asset('storage/' . $partner['logo']) }}" 
+                         alt="{{ $partner['name'] }}" 
+                         class="h-[60px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                         style="height: 60px;">
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     {{-- Services Section --}}
-    <div class="pt-10 pb-16">
+    <div class="py-4">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-8">Layanan Unggulan</h2>
+            <h2 class="text-3xl font-bold text-center mb-6">Layanan Unggulan</h2>
             <!-- Scrollable container -->
             <div class="flex overflow-x-auto space-x-8 snap-x snap-mandatory pb-4">
                 @foreach($services as $service)
@@ -43,9 +66,9 @@
     </div>
 
     {{-- Doctor Section --}}
-    <div class="py-16 bg-gray-50">
+    <div class="py-4 bg-gray-50">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-8">Dokter Kami</h2>
+            <h2 class="text-3xl font-bold text-center mb-6">Dokter Kami</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @php
                     // Ambil 4 dokter secara acak dari database
@@ -75,9 +98,9 @@
     </div>
 
     {{-- Articles Section --}}
-    <div class="py-16">
+    <div class="py-4">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-8">Artikel Terbaru</h2>
+            <h2 class="text-3xl font-bold text-center mb-6">Artikel Terbaru</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($articles as $article)
                     <a href="{{ route('articles.show', $article) }}" class="block bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200">
@@ -93,9 +116,9 @@
     </div>
 
     {{-- About Section --}}
-    <div class="py-16 bg-gray-50">
+    <div class="py-6 bg-gray-50">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
+            <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold text-gray-800">Tentang Kami</h2>
                 <p class="text-gray-600 mt-4 max-w-2xl mx-auto">RST dr Asmir Salatiga adalah rumah sakit yang berkomitmen memberikan pelayanan kesehatan yang terbaik bagi masyarakat dengan didukung oleh tenaga medis yang profesional dan fasilitas yang lengkap.</p>
             </div>
