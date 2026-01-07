@@ -16,7 +16,7 @@
 
             {{-- Sidebar with Main Image and Contact --}}
             <div>
-                <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="w-full h-auto object-cover rounded-lg shadow-md mb-6">
+                <x-service-media :service="$service" class="w-full h-auto object-cover rounded-lg shadow-md mb-6" />
                 
                 {{-- Contact Link --}}
                 @if($service->contact_link)

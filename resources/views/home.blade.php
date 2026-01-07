@@ -47,20 +47,35 @@
     <div class="py-4">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-6">Layanan Unggulan</h2>
-            <!-- Scrollable container -->
-            <div class="flex overflow-x-auto space-x-8 snap-x snap-mandatory pb-4">
-                @foreach($services as $service)
-                    <!-- Service Card -->
-                    <a href="{{ route('services.show', $service) }}" class="snap-start w-72 md:w-80 flex-shrink-0 block">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl h-full border border-gray-200">
-                            <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="w-full h-40 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold mb-2">{{ $service->title }}</h3>
-                                <p class="text-gray-600">{{ Str::limit(strip_tags($service->content), 100) }}</p>
+            <div class="w-full flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
+                <div class="flex shrink-0 animate-marquee-right">
+                    @foreach($services as $service)
+                        <!-- Service Card -->
+                        <a href="{{ route('services.show', $service) }}" class="w-72 md:w-80 flex-shrink-0 block mx-4">
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl h-full border border-gray-200">
+                                <x-service-media :service="$service" class="w-full h-40 object-cover" />
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold mb-2">{{ $service->title }}</h3>
+                                    <p class="text-gray-600">{{ Str::limit(strip_tags($service->content), 100) }}</p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                @endforeach
+                        </a>
+                    @endforeach
+                </div>
+                 <div class="flex shrink-0 animate-marquee-right" aria-hidden="true">
+                    @foreach($services as $service)
+                        <!-- Service Card -->
+                        <a href="{{ route('services.show', $service) }}" class="w-72 md:w-80 flex-shrink-0 block mx-4">
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl h-full border border-gray-200">
+                                <x-service-media :service="$service" class="w-full h-40 object-cover" />
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold mb-2">{{ $service->title }}</h3>
+                                    <p class="text-gray-600">{{ Str::limit(strip_tags($service->content), 100) }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
@@ -69,27 +84,37 @@
     <div class="py-4 bg-gray-50">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-6">Dokter Kami</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="w-full flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
                 @php
-                    // Ambil 4 dokter secara acak dari database
-                    $doctors = \App\Models\Doctor::with('specialization')->where('is_active', true)->inRandomOrder()->take(4)->get();
+                    // Ambil 8 dokter secara acak dari database untuk memastikan cukup untuk scroll
+                    $doctors = \App\Models\Doctor::with('specialization')->where('is_active', true)->inRandomOrder()->take(8)->get();
                 @endphp
-                @foreach($doctors as $doctor)
-                    <a href="{{ route('doctors.show', $doctor) }}" class="block bg-white rounded-lg shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200">
-                        @if($doctor->photo)
-                            <img src="{{ asset('storage/' . $doctor->photo) }}"
-                                 alt="{{ $doctor->name }}"
-                                 class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
-                        @else
-                            <!-- Placeholder menggunakan gambar generik dokter -->
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($doctor->name) }}&background=3b82f6&color=fff"
-                                 alt="{{ $doctor->name }}"
-                                 class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
-                        @endif
-                        <h3 class="text-lg font-semibold">{{ $doctor->name }}</h3>
-                        <p class="text-gray-600 text-sm">{{ $doctor->specialization->name }}</p>
-                    </a>
-                @endforeach
+                <div class="flex shrink-0 animate-marquee-left">
+                    @foreach($doctors as $doctor)
+                        <a href="{{ route('doctors.show', $doctor) }}" class="block bg-white rounded-lg shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200 w-64 flex-shrink-0 mx-4">
+                            @if($doctor->photo)
+                                <img src="{{ asset('storage/' . $doctor->photo) }}" alt="{{ $doctor->name }}" class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($doctor->name) }}&background=3b82f6&color=fff" alt="{{ $doctor->name }}" class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
+                            @endif
+                            <h3 class="text-lg font-semibold">{{ $doctor->name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ $doctor->specialization->name }}</p>
+                        </a>
+                    @endforeach
+                </div>
+                <div class="flex shrink-0 animate-marquee-left" aria-hidden="true">
+                    @foreach($doctors as $doctor)
+                        <a href="{{ route('doctors.show', $doctor) }}" class="block bg-white rounded-lg shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200 w-64 flex-shrink-0 mx-4">
+                            @if($doctor->photo)
+                                <img src="{{ asset('storage/' . $doctor->photo) }}" alt="{{ $doctor->name }}" class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($doctor->name) }}&background=3b82f6&color=fff" alt="{{ $doctor->name }}" class="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-2 border-white shadow">
+                            @endif
+                            <h3 class="text-lg font-semibold">{{ $doctor->name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ $doctor->specialization->name }}</p>
+                        </a>
+                    @endforeach
+                </div>
             </div>
             <div class="text-center mt-8">
                 <a href="{{ route('doctors.index') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Lihat Semua Dokter</a>

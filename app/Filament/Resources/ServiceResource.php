@@ -7,9 +7,12 @@ use App\Filament\Resources\ServiceResource\RelationManagers\ImagesRelationManage
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
+use Filament\Infolists;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceResource extends Resource
 {
@@ -43,10 +46,20 @@ class ServiceResource extends Resource
                     ->required()
                     ->label('Kategori'),
 
-                Forms\Components\Textarea::make('content')
+                Forms\Components\RichEditor::make('content')
                     ->required()
                     ->columnSpanFull()
                     ->label('Deskripsi'),
+
+                Forms\Components\Radio::make('upload_type')
+                    ->label('Tipe Unggahan')
+                    ->options([
+                        'image' => 'Gambar',
+                        'pdf' => 'PDF',
+                    ])
+                    ->default('image')
+                    ->live()
+                    ->required(),
 
                 Forms\Components\FileUpload::make('image')
                     ->image()
@@ -60,7 +73,17 @@ class ServiceResource extends Resource
                     ->disk('public')
                     ->label('Gambar')
                     ->maxSize(2048) // Maksimal 2MB
-                    ->directory('services'),
+                    ->directory('services')
+                    ->visible(fn ($get) => $get('upload_type') === 'image'),
+
+                Forms\Components\FileUpload::make('file_path')
+                    ->label('Unggah PDF')
+                    ->disk('public')
+                    ->directory('service-files')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->maxSize(5120) // Maksimal 5MB for PDF
+                    ->visible(fn ($get) => $get('upload_type') === 'pdf')
+                    ->required(fn ($get) => $get('upload_type') === 'pdf'),
 
                 Forms\Components\Toggle::make('is_featured')
                     ->label('Layanan Utama')
@@ -134,6 +157,36 @@ class ServiceResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\Section::make('Informasi Layanan')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('title')->label('Nama Layanan'),
+                        Infolists\Components\TextEntry::make('slug'),
+                        Infolists\Components\TextEntry::make('category'),
+                        Infolists\Components\TextEntry::make('content')->label('Deskripsi')->html()->columnSpanFull(),
+                    ])->columns(2),
+
+                Infolists\Components\Section::make('Media')
+                    ->schema([
+                        Infolists\Components\ImageEntry::make('image')
+                            ->visible(fn ($record) => $record->upload_type === 'image' && $record->image),
+                                                                Infolists\Components\ViewEntry::make('file_path')
+                                                                    ->label('Dokumen PDF')
+                                                                    ->view('infolists.components.download-link')
+                                                                    ->visible(fn ($record) => $record->upload_type === 'pdf' && $record->file_path),                    ]),
+
+                Infolists\Components\Section::make('Info Tambahan')
+                    ->schema([
+                        Infolists\Components\IconEntry::make('is_featured')->boolean()->label('Layanan Utama'),
+                        Infolists\Components\TextEntry::make('contact_icon'),
+                        Infolists\Components\TextEntry::make('contact_link')->url(fn($record) => $record->contact_link, true),
+                    ])->columns(3),
             ]);
     }
 

@@ -7,7 +7,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($services as $service)
                 <a href="{{ route('services.show', $service) }}" class="block bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-                    <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->title }}" class="w-full h-48 object-cover">
+                    <x-service-media :service="$service" class="w-full h-48 object-cover" />
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-2">{{ $service->title }}</h3>
                         <p class="text-gray-600">{{ Str::limit(strip_tags($service->content), 100) }}</p>
