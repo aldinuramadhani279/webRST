@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-white shadow-lg border-b border-gray-200">
+<body class="bg-gradient-to-br from-blue-100 via-slate-50 to-cyan-100 min-h-screen text-gray-800 font-sans selection:bg-blue-100 selection:text-blue-900">
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-2xl transition-all duration-300" x-data="{ mobileMenuOpen: false }">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <!-- Logo -->
@@ -21,27 +21,27 @@
                     </a>
                 </div>
 
-                <!-- Primary Nav -->
+                <!-- Primary Nav (Desktop) -->
                 <div class="hidden md:flex items-center space-x-2">
-                    <a href="/" class="px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->is('/') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">Home</a>
-                    <a href="{{ route('doctors.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->routeIs('doctors.index') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">Dokter</a>
+                    <a href="/" class="px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->is('/') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Home</a>
+                    <a href="{{ route('doctors.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('doctors.index') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Dokter</a>
                     <!-- Dropdown Layanan -->
                     <div x-data="{ open: false }" @click.away="open = false" class="relative">
-                        <button @click="open = !open" class="flex items-center w-full px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->routeIs('services.featured') || request()->routeIs('services.other') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <button @click="open = !open" class="flex items-center w-full px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('services.featured') || request()->routeIs('services.other') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">
                             <span>Layanan</span>
-                            <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-4 h-4 ml-1 transition-transform duration-200" :class="{'rotate-180': open}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </button>
                         <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1">
                             <a href="{{ route('services.featured') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Layanan Utama</a>
                             <a href="{{ route('services.other') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Layanan Lainnya</a>
                         </div>
                     </div>
-                    <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->routeIs('articles.index') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">Artikel</a>
+                    <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('articles.index') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Artikel</a>
                     <!-- Dropdown Galeri -->
                     <div x-data="{ open: false }" @click.away="open = false" class="relative">
-                        <button @click="open = !open" class="flex items-center w-full px-3 py-2 rounded-md text-base font-medium transition-colors {{ request()->routeIs('gallery.photos') || request()->routeIs('gallery.videos') ? 'bg-gray-100 text-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <button @click="open = !open" class="flex items-center w-full px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('gallery.photos') || request()->routeIs('gallery.videos') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">
                             <span>Galeri</span>
-                            <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-4 h-4 ml-1 transition-transform duration-200" :class="{'rotate-180': open}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </button>
                         <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1">
                             <a href="{{ route('gallery.photos') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Foto</a>
@@ -50,11 +50,10 @@
                     </div>
                 </div>
 
-                <!-- Contact Button (Dynamic) -->
+                <!-- Contact Button (Desktop) -->
                 <div class="hidden md:flex items-center">
                     @php
                         $emergencyNumbers = $settings['emergency_numbers'] ?? [];
-                        // Defensive decode
                         if (!is_array($emergencyNumbers) && is_string($emergencyNumbers)) {
                             $emergencyNumbers = json_decode($emergencyNumbers, true);
                         }
@@ -68,7 +67,7 @@
                                     style="background-color: #dc2626; color: #ffffff;">
                                 <i class="fas fa-phone-alt animate-pulse"></i>
                                 <span>Hubungi Kami</span>
-                                <i class="fas fa-chevron-down text-xs ml-1"></i>
+                                <i class="fas fa-chevron-down text-xs ml-1 transition-transform duration-200" :class="{'rotate-180': open}"></i>
                             </button>
                             <div x-show="open" 
                                  x-transition:enter="transition ease-out duration-200"
@@ -83,7 +82,7 @@
                                 </div>
                                 @foreach($emergencyNumbers as $emergency)
                                     @php
-                                        $icon = $emergency['icon'] ?? 'phone'; // Default to 'phone' if not set
+                                        $icon = $emergency['icon'] ?? 'phone'; 
                                         $isWhatsApp = $icon === 'whatsapp';
                                         $number = $emergency['number'] ?? '';
                                         $href = $isWhatsApp 
@@ -100,7 +99,7 @@
                                         @if($isWhatsApp)
                                             <i class="fab fa-whatsapp text-green-500 text-xl group-hover:scale-110 transition-transform"></i>
                                         @else
-                                            <i class="fas fa-phone-alt text-blue-500 text-xl group-hover:scale-110 transition-transform"></i>
+                                            <i class="fas fa-phone text-blue-500 text-xl group-hover:scale-110 transition-transform"></i>
                                         @endif
                                     </a>
                                 @endforeach
@@ -123,10 +122,78 @@
 
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
-                    <button class="text-gray-800 hover:text-blue-600 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path></svg>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-800 hover:text-blue-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                     </button>
                 </div>
+            </div>
+            
+            <!-- Mobile Menu Content -->
+            <div x-show="mobileMenuOpen" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 -translate-y-2"
+                 class="md:hidden pb-4 space-y-2 border-t border-gray-100 pt-2">
+                 
+                 <a href="/" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->is('/') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Home</a>
+                 <a href="{{ route('doctors.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('doctors.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Dokter</a>
+                 
+                 <!-- Mobile Layanan -->
+                 <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+                        <span>Layanan</span>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div x-show="open" class="pl-4 space-y-1">
+                        <a href="{{ route('services.featured') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Layanan Utama</a>
+                        <a href="{{ route('services.other') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Layanan Lainnya</a>
+                    </div>
+                 </div>
+
+                 <a href="{{ route('articles.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('articles.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Artikel</a>
+                 
+                 <!-- Mobile Galeri -->
+                 <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600">
+                        <span>Galeri</span>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div x-show="open" class="pl-4 space-y-1">
+                        <a href="{{ route('gallery.photos') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Foto</a>
+                        <a href="{{ route('gallery.videos') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Video</a>
+                    </div>
+                 </div>
+
+                 <!-- Mobile Emergency Button -->
+                 <div class="pt-4 border-t border-gray-100">
+                     @if(is_array($emergencyNumbers) && count($emergencyNumbers) >= 2)
+                        <div x-data="{ open: true }">
+                            <div class="px-3 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Kontak Darurat</div>
+                            @foreach($emergencyNumbers as $emergency)
+                                @php
+                                    $num = $emergency['number'] ?? '';
+                                    $waHref = 'https://wa.me/62' . preg_replace('/[^0-9]/', '', $num);
+                                @endphp
+                                <a href="{{ $waHref }}" target="_blank" class="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-md">
+                                    <i class="fab fa-whatsapp text-green-500 text-lg"></i>
+                                    <span class="font-medium">{{ $emergency['label'] ?? 'IGD' }} - {{ $num }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                     @else
+                        <!-- Single Button Mobile -->
+                         <a href="https://wa.me/62{{ preg_replace('/[^0-9]/', '', $singleNum) }}" target="_blank" class="flex items-center justify-center space-x-2 w-full px-4 py-3 bg-red-600 text-white rounded-lg font-bold shadow-md hover:bg-red-700">
+                            <i class="fas fa-phone-alt animate-pulse"></i>
+                            <span>Hubungi Kami ({{ $singleLabel }})</span>
+                         </a>
+                     @endif
+                 </div>
             </div>
         </div>
     </nav>
