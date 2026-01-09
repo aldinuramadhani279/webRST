@@ -16,7 +16,14 @@
 
             {{-- Sidebar with Main Image and Contact --}}
             <div>
-                <x-service-media :service="$service" class="w-full h-auto object-cover rounded-lg shadow-md mb-6" />
+                @if($service->upload_type === 'pdf' && !empty($service->file_path))
+                    <a href="{{ Illuminate\Support\Facades\Storage::url($service->file_path) }}" download class="block mb-6 group">
+                        <x-service-media :service="$service" class="w-full h-auto object-cover rounded-lg shadow-md group-hover:opacity-90 transition" />
+                        <span class="block text-center mt-2 text-sm text-blue-600 font-medium group-hover:underline">Download PDF</span>
+                    </a>
+                @else
+                    <x-service-media :service="$service" class="w-full h-auto object-cover rounded-lg shadow-md mb-6" />
+                @endif
                 
                 {{-- Contact Link --}}
                 @if($service->contact_link)
