@@ -12,7 +12,7 @@ class GalleryController extends Controller
      */
     public function photos()
     {
-        $albums = Album::with('photos')->latest()->get();
+        $albums = Album::with('photos')->latest()->paginate(12);
 
         return view('gallery.photos', compact('albums'));
     }

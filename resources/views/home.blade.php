@@ -141,14 +141,33 @@
     </div>
     {{-- About Section --}}
     @if(!empty($settings['about_us_title']) && !empty($settings['about_us_content']))
-    <div class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-3">{{ $settings['about_us_title'] }}</h2>
-            @if(!empty($settings['about_us_subtitle']))
-                <p class="text-lg text-gray-300 mb-4">{{ $settings['about_us_subtitle'] }}</p>
-            @endif
-            <div class="prose prose-invert max-w-3xl mx-auto">
-                {!! $settings['about_us_content'] !!}
+    <div class="py-8 pb-12"> <!-- Adjusted padding -->
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-50">
+                <div class="md:flex">
+                    <!-- Decorative Side (Optional, or just styling) -->
+                    <div class="hidden md:block md:w-2/12 bg-gradient-to-b from-blue-600 to-cyan-500 relative">
+                        <div class="absolute inset-0 flex items-center justify-center text-white/20">
+                            <i class="fas fa-hospital text-6xl"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Side -->
+                    <div class="w-full md:w-10/12 p-8 md:p-10">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <i class="fas fa-info-circle text-blue-600 text-2xl md:hidden"></i> <!-- Icon for mobile -->
+                            <h2 class="text-3xl font-bold text-gray-800">{{ $settings['about_us_title'] }}</h2>
+                        </div>
+                        
+                        @if(!empty($settings['about_us_subtitle']))
+                            <p class="text-lg text-blue-500 font-medium mb-6 italic">{{ $settings['about_us_subtitle'] }}</p>
+                        @endif
+                        
+                        <div class="prose prose-blue max-w-none text-gray-600 leading-relaxed">
+                            {!! $settings['about_us_content'] !!}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
