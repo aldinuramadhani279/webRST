@@ -18,7 +18,7 @@
 
                 {{-- Sidebar with Main Image and Contact --}}
                 <div>
-                    <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-auto object-cover rounded-lg shadow-md mb-6">
+                    <img src="{{ asset('storage/' . $article->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-auto object-cover rounded-lg shadow-md mb-6">
                     
                     {{-- Contact Link --}}
                     @if($article->contact_link)

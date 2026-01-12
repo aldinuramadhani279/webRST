@@ -6,7 +6,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($articles as $article)
             <a href="{{ route('articles.show', $article) }}" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300">
-                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
+                <img src="{{ asset('storage/' . $article->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <h3 class="text-xl font-bold mb-2">{{ $article->title }}</h3>
                     <p class="text-gray-600 text-sm">{{ \Carbon\Carbon::parse($article->published_at)->format('d M Y') }}</p>

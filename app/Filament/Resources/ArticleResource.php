@@ -37,7 +37,7 @@ class ArticleResource extends Resource
                     ->required()
                     ->unique(Article::class, 'slug', ignoreRecord: true),
                 RichEditor::make('content')->required()->columnSpanFull(),
-                FileUpload::make('image')
+                FileUpload::make('thumbnail')
                     ->required()
                     ->image()
                     ->imageEditor()
@@ -46,16 +46,19 @@ class ArticleResource extends Resource
                         '4:3',
                         '1:1',
                     ])
-                    ->imageCropAspectRatio('16:9') // Default to a wide aspect ratio for article images
-                    ->disk('public') // Ensure public disk is used
-                    ->directory('articles'), // Save to a specific directory
+                    ->imageCropAspectRatio('16:9')
+                    ->disk('public')
+                    ->directory('articles')
+                    ->maxSize(2048) // Limit 2MB to prevent timeout
+                    ->imageResizeTargetWidth('1280') // Resize huge images
+                    ->imageResizeMode('cover'),
                 Select::make('status')
                     ->options([
                         'draft' => 'Draft',
                         'published' => 'Published',
                     ])
                     ->required(),
-                DateTimePicker::make('published_at'),
+                DateTimePicker::make('published_at')->default(now())->label('Tanggal Publikasi'),
 
                 Forms\Components\Section::make('Kontak Tambahan')
                     ->description('Opsional: Tambahkan link kontak untuk artikel ini.')
@@ -80,7 +83,7 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->disk('public'),
+                ImageColumn::make('thumbnail')->disk('public'),
                 TextColumn::make('title')->searchable()->sortable(),
                 TextColumn::make('slug')->searchable(),
                 TextColumn::make('status')->sortable(),
