@@ -8,7 +8,7 @@
             @foreach($videos as $video)
                 @php
                     $youtubeID = null;
-                    if(preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $video->url, $matches)) {
+                    if(preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $video->youtube_link, $matches)) {
                         $youtubeID = $matches[1];
                     }
                 @endphp
@@ -30,14 +30,9 @@
                     </div>
                     <div class="p-4">
                         <h3 class="font-bold text-lg mb-2 line-clamp-2">{{ $video->title }}</h3>
-                        <p class="text-gray-600 text-sm line-clamp-2">{{ $video->description }}</p>
                     </div>
                 </div>
             @endforeach
-        </div>
-        
-        <div class="mt-8">
-            {{ $videos->links() }}
         </div>
     @else
         <div class="text-center py-16 bg-white rounded-lg shadow-sm">

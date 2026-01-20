@@ -75,7 +75,7 @@ class DoctorsRelationManager extends RelationManager
                     ->label('Status Aktif'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->slideOver(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

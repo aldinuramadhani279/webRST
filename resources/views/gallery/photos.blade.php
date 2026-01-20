@@ -7,9 +7,9 @@
         <section class="mb-12">
             <h2 class="text-2xl font-bold mb-6 border-l-4 border-blue-600 pl-4">{{ $album->title }}</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                @foreach($album->files as $file)
-                    <a href="{{ asset('storage/' . $file) }}" data-fancybox="gallery-{{ $album->id }}" class="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <img src="{{ asset('storage/' . $file) }}" alt="Foto Galeri" class="w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300">
+                @foreach($album->photos as $photo)
+                    <a href="{{ asset('storage/' . $photo->path) }}" data-fancybox="gallery-{{ $album->id }}" class="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <img src="{{ asset('storage/' . $photo->path) }}" alt="{{ $photo->title ?? 'Foto Galeri' }}" class="w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300">
                     </a>
                 @endforeach
             </div>
