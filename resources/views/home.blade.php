@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- Hero Section --}}
-    <div class="relative max-h-[400px] overflow-hidden rounded-lg mx-auto mt-1 mb-1 border-2 border-white shadow-lg">
+    <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-3 mt-3 mb-3 border-4 border-white shadow-xl">
         <!-- Background Image -->
         <img src="{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}"
              alt="Banner RST dr Asmir"
