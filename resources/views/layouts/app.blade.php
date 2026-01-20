@@ -198,11 +198,11 @@
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-2">
         @yield('content')
     </main>
 
-    <footer class="bg-gray-800 text-white mt-8">
+    <footer class="bg-gray-800 text-white">
         <div class="container mx-auto px-4 pt-12 pb-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- About -->

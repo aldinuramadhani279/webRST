@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- Hero Section --}}
-    <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-auto mt-4 mb-2 border-4 border-white shadow-lg">
+    <div class="relative max-h-[400px] overflow-hidden rounded-lg mx-auto mt-1 mb-1 border-2 border-white shadow-lg">
         <!-- Background Image -->
         <img src="{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}"
              alt="Banner RST dr Asmir"
@@ -29,7 +29,7 @@
         }
     @endphp
     @if(is_array($partnerLogos) && count($partnerLogos) > 0)
-    <div class="bg-white rounded-xl shadow-md p-4 mb-4 border border-gray-100">
+    <div class="bg-white rounded-xl shadow-md p-3 mb-2 border border-gray-100">
         <div class="flex items-center justify-center flex-wrap gap-6">
             @foreach($partnerLogos as $partner)
                 <div class="flex flex-col items-center group">
@@ -44,9 +44,9 @@
     @endif
 
     {{-- Services Section --}}
-    <div class="py-4">
+    <div class="py-2">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-6">Layanan Unggulan</h2>
+            <h2 class="text-3xl font-bold text-center mb-3">Layanan Unggulan</h2>
             <div class="w-full flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
                 <div class="flex shrink-0 animate-marquee-right">
                     @foreach($services as $service)
@@ -81,9 +81,9 @@
     </div>
 
     {{-- Doctor Section --}}
-    <div class="py-4 bg-gray-50">
+    <div class="py-2 bg-gray-50">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-6">Dokter Kami</h2>
+            <h2 class="text-3xl font-bold text-center mb-3">Dokter Kami</h2>
             <div class="w-full flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
                 @php
                     // Ambil 8 dokter secara acak dari database untuk memastikan cukup untuk scroll
@@ -116,17 +116,17 @@
                     @endforeach
                 </div>
             </div>
-            <div class="text-center mt-8">
+            <div class="text-center mt-4">
                 <a href="{{ route('doctors.index') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Lihat Semua Dokter</a>
             </div>
         </div>
     </div>
 
     {{-- Articles Section --}}
-    <div class="py-4">
+    <div class="py-2">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-6">Artikel Terbaru</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h2 class="text-3xl font-bold text-center mb-3">Artikel Terbaru</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($articles as $article)
                     <a href="{{ route('articles.show', $article) }}" class="block bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200">
                         <img src="{{ asset('storage/' . $article->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
@@ -141,7 +141,7 @@
     </div>
     {{-- About Section --}}
     @if(!empty($settings['about_us_title']) && !empty($settings['about_us_content']))
-    <div class="py-8 pb-12"> <!-- Adjusted padding -->
+    <div class="py-4 pb-6"> <!-- Adjusted padding -->
         <div class="container mx-auto px-4">
             <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-50">
                 <div class="md:flex">

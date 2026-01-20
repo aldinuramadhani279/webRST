@@ -21,6 +21,12 @@ class PhotoResource extends Resource
 
     protected static ?string $navigationGroup = 'Galeri';
 
+    protected static ?string $navigationLabel = 'Foto';
+
+    protected static ?string $modelLabel = 'Foto';
+
+    protected static ?string $pluralModelLabel = 'Foto';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -29,14 +35,21 @@ class PhotoResource extends Resource
                     ->relationship('album', 'title')
                     ->searchable()
                     ->preload()
-                    ->required(),
-                TextInput::make('title'),
+                    ->required()
+                    ->label('Album'),
+                TextInput::make('title')
+                    ->label('Judul (Opsional)')
+                    ->helperText('Jika dikosongkan, akan menggunakan nama file'),
                 FileUpload::make('path')
-                    ->label('Photo')
+                    ->label('Foto')
                     ->image()
                     ->imageEditor()
                     ->disk('public')
                     ->directory('photos')
+                    ->multiple()
+                    ->reorderable()
+                    ->maxFiles(20)
+                    ->helperText('Anda dapat mengunggah hingga 20 foto sekaligus')
                     ->required(),
             ]);
     }
@@ -45,21 +58,27 @@ class PhotoResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('path')->disk('public')->label('Photo'),
+                ImageColumn::make('path')->disk('public')->label('Foto'),
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Judul'),
                 Tables\Columns\TextColumn::make('album.title')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Album'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Dibuat'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('album')
+                    ->relationship('album', 'title')
+                    ->label('Filter Album'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

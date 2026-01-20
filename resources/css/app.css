@@ -13,5 +13,234 @@ body {
 
 /* Override filament styles if needed */
 .fi-section {
-    @apply bg-white rounded-lg shadow-sm;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* ========================================
+   PROSE TYPOGRAPHY STYLES
+   For article and service content display
+   ======================================== */
+
+.prose {
+    color: #374151;
+    line-height: 1.75;
+}
+
+/* Headings */
+.prose h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.prose h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.prose h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.prose h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Paragraphs */
+.prose p {
+    margin-bottom: 1rem;
+    line-height: 1.75;
+}
+
+/* Unordered Lists (Bullet Points) */
+.prose ul {
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+}
+
+.prose ul li {
+    padding-left: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Nested unordered lists */
+.prose ul ul {
+    list-style-type: circle;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+}
+
+.prose ul ul ul {
+    list-style-type: square;
+}
+
+/* Ordered Lists (Numbered) */
+.prose ol {
+    list-style-type: decimal;
+    list-style-position: outside;
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+}
+
+.prose ol li {
+    padding-left: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Nested ordered lists */
+.prose ol ol {
+    list-style-type: lower-alpha;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+}
+
+.prose ol ol ol {
+    list-style-type: lower-roman;
+}
+
+/* Mixed nested lists */
+.prose ul ol,
+.prose ol ul {
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+}
+
+/* Strong/Bold text */
+.prose strong,
+.prose b {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Italic text */
+.prose em,
+.prose i {
+    font-style: italic;
+}
+
+/* Links */
+.prose a {
+    color: #2563eb;
+    text-decoration: underline;
+    transition: color 0.15s ease;
+}
+
+.prose a:hover {
+    color: #1e40af;
+}
+
+/* Blockquotes */
+.prose blockquote {
+    border-left: 4px solid #3b82f6;
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #eff6ff;
+    font-style: italic;
+    color: #374151;
+}
+
+/* Code blocks */
+.prose code {
+    background-color: #f3f4f6;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-family: ui-monospace, monospace;
+    color: #dc2626;
+}
+
+.prose pre {
+    background-color: #111827;
+    color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.prose pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+/* Tables */
+.prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.prose th {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.prose td {
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 1rem;
+}
+
+.prose tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* Horizontal rule */
+.prose hr {
+    border-top: 1px solid #d1d5db;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Images in prose */
+.prose img {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Definition lists */
+.prose dl {
+    margin-bottom: 1rem;
+}
+
+.prose dt {
+    font-weight: 600;
+    color: #111827;
+}
+
+.prose dd {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #374151;
 }
