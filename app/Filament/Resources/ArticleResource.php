@@ -40,17 +40,13 @@ class ArticleResource extends Resource
                 FileUpload::make('thumbnail')
                     ->required()
                     ->image()
-                    ->imageEditor()
-                    ->imageEditorAspectRatios([
-                        '16:9',
-                        '4:3',
-                        '1:1',
-                    ])
+                    // ->imageEditor() // DISABLED FOR TESTING
+                    // ->imageEditorAspectRatios([...])
                     ->imageCropAspectRatio('16:9')
                     ->disk('public')
                     ->directory('articles')
-                    ->maxSize(2048) // Limit 2MB to prevent timeout
-                    ->imageResizeTargetWidth('1280') // Resize huge images
+                    ->maxSize(2048)
+                    ->imageResizeTargetWidth('1280')
                     ->imageResizeMode('cover'),
                 Select::make('status')
                     ->options([

@@ -60,8 +60,8 @@ class SiteSettings extends Page implements HasForms
                         FileUpload::make('logo')
                             ->label('Logo Website')
                             ->image()
-                            ->imageEditor()
-                            ->imageEditorAspectRatios(['1:1', '4:3']) // Square and standard
+                            // ->imageEditor() // DISABLED FOR TESTING
+                            // ->imageEditorAspectRatios([...])
                             ->imageCropAspectRatio('1:1')
                             ->directory('settings')
                             ->disk('public'),
@@ -85,7 +85,7 @@ class SiteSettings extends Page implements HasForms
                         FileUpload::make('about_us_image')
                             ->label('Gambar')
                             ->image()
-                            ->imageEditor()
+                            // ->imageEditor() // DISABLED FOR TESTING
                             ->directory('settings')
                             ->disk('public'),
                     ])->columns(1),

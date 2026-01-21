@@ -1,5 +1,9 @@
 <?php
 
+// Override PHP execution timeout for slow development machines
+set_time_limit(300); // 5 minutes
+ini_set('max_execution_time', 300);
+
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 

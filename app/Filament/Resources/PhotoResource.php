@@ -43,7 +43,7 @@ class PhotoResource extends Resource
                 FileUpload::make('path')
                     ->label('Foto')
                     ->image()
-                    ->imageEditor()
+                    // ->imageEditor() // DISABLED FOR TESTING
                     ->disk('public')
                     ->directory('photos')
                     ->multiple()
