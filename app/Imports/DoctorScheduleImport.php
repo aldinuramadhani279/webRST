@@ -4,11 +4,10 @@ namespace App\Imports;
 
 use App\Models\Doctor;
 use App\Models\Schedule;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class DoctorScheduleImport implements ToCollection, WithHeadingRow
 {
@@ -53,7 +52,7 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             $endTime = $this->formatTime($jamSelesai);
 
             if (!$startTime || !$endTime) {
-                $this->errors[] = "Baris {$rowNumber}: Format waktu tidak valid";
+                $this->errors[] = "Baris {$rowNumber}: Format waktu tidak valid (jam_mulai: {$jamMulai}, jam_selesai: {$jamSelesai})";
                 continue;
             }
 
@@ -79,16 +78,38 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             return null;
         }
 
-        // If it's a decimal (Excel time format), convert it
-        if (is_numeric($value)) {
-            $hours = floor($value * 24);
-            $minutes = round(($value * 24 - $hours) * 60);
-            return sprintf('%02d:%02d:00', $hours, $minutes);
+        // If it's a decimal (Excel time format), use PhpSpreadsheet converter
+        if (is_numeric($value) && $value > 0 && $value < 1) {
+            try {
+                // Use PhpSpreadsheet's official converter
+                $dateTime = Date::excelToDateTimeObject($value);
+                return $dateTime->format('H:i:00');
+            } catch (\Exception $e) {
+                // Fallback to manual calculation
+                $totalMinutes = round($value * 24 * 60);
+                $hours = floor($totalMinutes / 60) % 24;
+                $minutes = $totalMinutes % 60;
+                return sprintf('%02d:%02d:00', $hours, $minutes);
+            }
         }
 
-        // If it's already in HH:MM or HH:MM:SS format
-        if (preg_match('/^(\d{1,2}):(\d{2})(?::\d{2})?$/', $value, $matches)) {
-            return sprintf('%02d:%02d:00', $matches[1], $matches[2]);
+        // If it's a larger number (Excel serial date), extract time part only
+        if (is_numeric($value) && $value >= 1) {
+            try {
+                $dateTime = Date::excelToDateTimeObject($value);
+                return $dateTime->format('H:i:00');
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        // If it's already in HH:MM or HH:MM:SS format (string)
+        if (is_string($value)) {
+            if (preg_match('/^(\d{1,2}):(\d{2})(?::\d{2})?$/', trim($value), $matches)) {
+                $hours = intval($matches[1]) % 24;
+                $minutes = intval($matches[2]) % 60;
+                return sprintf('%02d:%02d:00', $hours, $minutes);
+            }
         }
 
         return null;

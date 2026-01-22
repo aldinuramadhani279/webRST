@@ -76,6 +76,7 @@ class ScheduleResource extends Resource
             'index' => Pages\ListSchedules::route('/'),
             'create' => Pages\CreateSchedule::route('/create'),
             'edit' => Pages\EditSchedule::route('/{record}/edit'),
+            'import' => Pages\ImportSchedule::route('/import'),
         ];
     }
 }

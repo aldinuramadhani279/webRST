@@ -4,13 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DoctorResource\Pages;
 use App\Models\Doctor;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class DoctorResource extends Resource
@@ -19,41 +16,85 @@ class DoctorResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    // SIMPLIFIED FOR TESTING - removed heavy components
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
-                TextInput::make('sip_number')->required(),
-                Toggle::make('is_active')->required(),
+                Forms\Components\Select::make('specialization_id')
+                    ->relationship('specialization', 'name')
+                    ->required()
+                    ->label('Spesialisasi'),
+
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255)
+                    ->label('Nama Dokter'),
+
+                Forms\Components\TextInput::make('sip_number')
+                    ->required()
+                    ->maxLength(255)
+                    ->label('Nomor SIP'),
+
+                Forms\Components\Textarea::make('bio')
+                    ->required()
+                    ->columnSpanFull()
+                    ->label('Biografi'),
+
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->label('Foto')
+                    ->maxSize(2048)
+                    ->directory('doctors'),
+
+                Forms\Components\Toggle::make('is_active')
+                    ->label('Aktif')
+                    ->default(true),
             ]);
     }
 
-    // SIMPLIFIED TABLE - no images, no filters, no relations
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name')->sortable()->searchable(),
-                TextColumn::make('sip_number'),
-                ToggleColumn::make('is_active')->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable()
+                    ->label('Nama Dokter'),
+
+                Tables\Columns\TextColumn::make('sip_number')
+                    ->searchable()
+                    ->label('Nomor SIP'),
+
+                Tables\Columns\TextColumn::make('specialization.name')
+                    ->sortable()
+                    ->label('Spesialisasi'),
+
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->sortable()
+                    ->label('Aktif'),
             ])
             ->filters([
-                // REMOVED ALL FILTERS FOR TESTING
+                Tables\Filters\SelectFilter::make('specialization')
+                    ->relationship('specialization', 'name')
+                    ->label('Spesialisasi'),
+                Tables\Filters\TernaryFilter::make('is_active')
+                    ->label('Status Aktif'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                // REMOVED BULK ACTIONS FOR TESTING
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            // EMPTY FOR TESTING
+            //
         ];
     }
 

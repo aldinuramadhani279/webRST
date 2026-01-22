@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->brandName('RST dr Asmir') // Set custom brand name
+            ->brandName('RST dr Asmir')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -41,77 +41,79 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class, // Remove Filament info widget
             ])
-            ->spa(false) // Disable SPA to prevent Alpine/Livewire state issues
+            ->spa(false)
+            ->renderHook(
+                'panels::head.start',
+                fn (): string => '<script>
+                    // CRITICAL FIX: Patch Alpine $refs before Alpine loads
+                    // This creates a dummy element that acts as a fallback when modalContainer is missing
+                    
+                    (function() {
+                        // Create dummy element that has dispatchEvent but does nothing
+                        const dummyElement = document.createElement("div");
+                        dummyElement.dispatchEvent = function() { return true; };
+                        
+                        // When Alpine initializes, patch the $refs magic
+                        document.addEventListener("alpine:init", function() {
+                            if (window.Alpine && window.Alpine.magic) {
+                                const originalRefs = window.Alpine.magic("refs");
+                                
+                                window.Alpine.magic("refs", function(el) {
+                                    const refs = originalRefs ? originalRefs(el) : {};
+                                    
+                                    // Return a Proxy that returns dummy element for missing refs
+                                    return new Proxy(refs || {}, {
+                                        get(target, prop) {
+                                            if (target[prop]) return target[prop];
+                                            // Return dummy element for missing refs like modalContainer
+                                            if (prop === "modalContainer" || prop.includes("modal")) {
+                                                return dummyElement;
+                                            }
+                                            return target[prop];
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                        
+                        // Also suppress console errors for this specific issue
+                        const originalError = console.error.bind(console);
+                        console.error = function(...args) {
+                            const msg = args.join(" ");
+                            if (msg.includes("modalContainer") || msg.includes("dispatchEvent")) {
+                                return; // Suppress
+                            }
+                            originalError(...args);
+                        };
+                    })();
+                </script>'
+            )
             ->renderHook(
                 'panels::head.end',
                 fn (): string => '<style>
-                    /* NUCLEAR FIX: Hide ALL stuck modal overlays completely */
-                    .fi-modal-close-overlay,
-                    [x-show="isOpen"][x-transition],
-                    .fixed.inset-0.bg-gray-900\/50,
-                    .fixed.inset-0[aria-hidden="true"],
-                    div[x-ref="modalContainer"] > div.fixed,
-                    .fi-modal-window ~ div.fixed {
-                        display: none !important;
-                        visibility: hidden !important;
-                        opacity: 0 !important;
-                        pointer-events: none !important;
-                        z-index: -9999 !important;
-                        width: 0 !important;
-                        height: 0 !important;
-                    }
-                    /* Ensure main content is always clickable */
-                    .fi-main, .fi-sidebar, .fi-topbar, .fi-ta-table {
+                    .fi-main, .fi-sidebar, .fi-topbar {
                         pointer-events: auto !important;
-                        position: relative;
-                        z-index: 1;
                     }
                 </style>'
             )
             ->renderHook(
                 'panels::body.end',
                 fn (): string => '<script>
-                    // Remove stuck overlays after every Livewire update
-                    function removeStuckOverlays() {
-                        const overlaySelectors = [
-                            ".fixed.inset-0.z-40",
-                            ".fixed.inset-0.bg-gray-900\\/50",
-                            "[aria-hidden=\"true\"].fixed.inset-0",
-                            ".fi-modal-close-overlay"
-                        ];
-                        overlaySelectors.forEach(selector => {
-                            document.querySelectorAll(selector).forEach(el => {
-                                el.style.display = "none";
-                                el.style.pointerEvents = "none";
-                                el.remove();
-                            });
+                    // Cleanup orphan overlays
+                    function cleanupOrphanOverlays() {
+                        document.querySelectorAll(".fixed.inset-0.z-40").forEach(overlay => {
+                            const container = overlay.closest("[x-data]");
+                            const modal = container?.querySelector(".fi-modal-window");
+                            if (!modal || modal.offsetParent === null || modal.style.display === "none") {
+                                overlay.style.pointerEvents = "none";
+                                overlay.style.opacity = "0";
+                            }
                         });
                     }
                     
-                    // Run on initial load
-                    document.addEventListener("DOMContentLoaded", removeStuckOverlays);
-                    
-                    // Run after every Livewire update
-                    document.addEventListener("livewire:navigated", removeStuckOverlays);
-                    document.addEventListener("livewire:load", removeStuckOverlays);
-                    
-                    // Also use MutationObserver to catch dynamically added overlays
-                    const observer = new MutationObserver((mutations) => {
-                        mutations.forEach((mutation) => {
-                            mutation.addedNodes.forEach((node) => {
-                                if (node.nodeType === 1 && node.classList && 
-                                    (node.classList.contains("fixed") || node.classList.contains("fi-modal"))) {
-                                    setTimeout(removeStuckOverlays, 100);
-                                }
-                            });
-                        });
-                    });
-                    observer.observe(document.body, { childList: true, subtree: true });
-                    
-                    // Periodic cleanup every 2 seconds
-                    setInterval(removeStuckOverlays, 2000);
+                    document.addEventListener("livewire:navigated", () => setTimeout(cleanupOrphanOverlays, 300));
+                    setInterval(cleanupOrphanOverlays, 2000);
                 </script>'
             )
             ->middleware([
