@@ -36,18 +36,22 @@ class ArticleResource extends Resource
                 TextInput::make('slug')
                     ->required()
                     ->unique(Article::class, 'slug', ignoreRecord: true),
-                RichEditor::make('content')->required()->columnSpanFull(),
-                FileUpload::make('thumbnail')
+                RichEditor::make('content')
                     ->required()
+                    ->columnSpanFull(),
+                FileUpload::make('thumbnail')
                     ->image()
-                    // ->imageEditor() // DISABLED FOR TESTING
-                    // ->imageEditorAspectRatios([...])
-                    ->imageCropAspectRatio('16:9')
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                        null, // Free crop
+                    ])
                     ->disk('public')
                     ->directory('articles')
                     ->maxSize(2048)
-                    ->imageResizeTargetWidth('1280')
-                    ->imageResizeMode('cover'),
+                    ->columnSpanFull(),
                 Select::make('status')
                     ->options([
                         'draft' => 'Draft',
