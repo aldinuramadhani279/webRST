@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ScheduleResource\Pages;
 use App\Models\Schedule;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
@@ -24,7 +25,8 @@ class ScheduleResource extends Resource
             ->schema([
                 Select::make('doctor_id')
                     ->relationship('doctor', 'name')
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
                 Select::make('day')
                     ->options([
                         'Senin' => 'Senin',
@@ -35,9 +37,29 @@ class ScheduleResource extends Resource
                         'Sabtu' => 'Sabtu',
                         'Minggu' => 'Minggu',
                     ])
-                    ->required(),
-                TimePicker::make('start_time')->required(),
-                TimePicker::make('end_time')->required(),
+                    ->required()
+                    ->columnSpanFull(),
+                Section::make('Sesi 1')
+                    ->description('Waktu praktik sesi pertama')
+                    ->schema([
+                        TimePicker::make('start_time')
+                            ->label('Jam Mulai')
+                            ->required(),
+                        TimePicker::make('end_time')
+                            ->label('Jam Selesai')
+                            ->required(),
+                    ])
+                    ->columns(2),
+                Section::make('Sesi 2 (Opsional)')
+                    ->description('Isi jika dokter memiliki jadwal kedua di hari yang sama')
+                    ->schema([
+                        TimePicker::make('start_time_2')
+                            ->label('Jam Mulai'),
+                        TimePicker::make('end_time_2')
+                            ->label('Jam Selesai'),
+                    ])
+                    ->columns(2)
+                    ->collapsed(),
             ]);
     }
 
@@ -45,10 +67,19 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('doctor.name'),
-                TextColumn::make('day'),
-                TextColumn::make('start_time'),
-                TextColumn::make('end_time'),
+                TextColumn::make('doctor.name')
+                    ->label('Dokter')
+                    ->searchable(),
+                TextColumn::make('day')
+                    ->label('Hari'),
+                TextColumn::make('session_1')
+                    ->label('Sesi 1')
+                    ->getStateUsing(fn ($record) => substr($record->start_time, 0, 5) . ' - ' . substr($record->end_time, 0, 5)),
+                TextColumn::make('session_2')
+                    ->label('Sesi 2')
+                    ->getStateUsing(fn ($record) => $record->start_time_2 
+                        ? substr($record->start_time_2, 0, 5) . ' - ' . substr($record->end_time_2, 0, 5)
+                        : '-'),
             ])
             ->filters([
                 //

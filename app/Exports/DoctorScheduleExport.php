@@ -26,7 +26,9 @@ class DoctorScheduleExport implements FromCollection, WithHeadings, WithStyles, 
             'spesialisasi' => 'Dokter Umum',
             'hari' => 'Senin',
             'jam_mulai' => '08:00',
-            'jam_selesai' => '16:00',
+            'jam_selesai' => '12:00',
+            'jam_mulai_2' => '14:00',
+            'jam_selesai_2' => '17:00',
         ]);
         
         foreach ($doctors as $doctor) {
@@ -47,6 +49,8 @@ class DoctorScheduleExport implements FromCollection, WithHeadings, WithStyles, 
                     'hari' => $day,
                     'jam_mulai' => $schedule ? substr($schedule->start_time, 0, 5) : '',
                     'jam_selesai' => $schedule ? substr($schedule->end_time, 0, 5) : '',
+                    'jam_mulai_2' => $schedule && $schedule->start_time_2 ? substr($schedule->start_time_2, 0, 5) : '',
+                    'jam_selesai_2' => $schedule && $schedule->end_time_2 ? substr($schedule->end_time_2, 0, 5) : '',
                 ]);
                 $no++;
             }
@@ -66,6 +70,8 @@ class DoctorScheduleExport implements FromCollection, WithHeadings, WithStyles, 
             'hari',
             'jam_mulai',
             'jam_selesai',
+            'jam_mulai_2',
+            'jam_selesai_2',
         ];
     }
 
@@ -87,6 +93,8 @@ class DoctorScheduleExport implements FromCollection, WithHeadings, WithStyles, 
             'E' => 12,
             'F' => 12,
             'G' => 12,
+            'H' => 12,
+            'I' => 12,
         ];
     }
 }

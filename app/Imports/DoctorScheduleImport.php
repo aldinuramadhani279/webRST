@@ -26,6 +26,10 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             $hari = $row['hari'] ?? null;
             $sipNumber = $row['nomor_sip'] ?? null;
             
+            // Second session (optional)
+            $jamMulai2 = $row['jam_mulai_2'] ?? null;
+            $jamSelesai2 = $row['jam_selesai_2'] ?? null;
+            
             // If schedule time is not filled, skip this row
             if (empty($jamMulai) || empty($jamSelesai)) {
                 $this->skipCount++;
@@ -56,6 +60,10 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
+            // Format second session times (nullable)
+            $startTime2 = !empty($jamMulai2) ? $this->formatTime($jamMulai2) : null;
+            $endTime2 = !empty($jamSelesai2) ? $this->formatTime($jamSelesai2) : null;
+
             // Update or create schedule
             Schedule::updateOrCreate(
                 [
@@ -65,6 +73,8 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
                 [
                     'start_time' => $startTime,
                     'end_time' => $endTime,
+                    'start_time_2' => $startTime2,
+                    'end_time_2' => $endTime2,
                 ]
             );
 
