@@ -63,9 +63,13 @@ class ServiceResource extends Resource
 
                 Forms\Components\FileUpload::make('image')
                     ->image()
-                    // ->imageEditor() // DISABLED FOR TESTING
-                    // ->imageEditorAspectRatios([...])
-                    ->imageCropAspectRatio('4:3')
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '4:3',
+                        '16:9',
+                        '1:1',
+                        null, // Free crop
+                    ])
                     ->disk('public')
                     ->label('Gambar')
                     ->maxSize(2048)

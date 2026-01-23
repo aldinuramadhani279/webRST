@@ -43,6 +43,47 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
             ])
             ->spa(false)
+            ->renderHook(
+                'panels::head.end',
+                fn (): string => '<style>
+                    /* Prevent orphan overlays from blocking content */
+                    .fi-modal-close-overlay:not(:has(+ .fi-modal-window[style*="display: block"])):not(:has(+ .fi-modal-window:not([style*="display: none"]))) {
+                        pointer-events: none !important;
+                        opacity: 0 !important;
+                    }
+                    /* Ensure main content is always clickable */
+                    .fi-main, .fi-sidebar, .fi-topbar, .fi-header {
+                        position: relative;
+                        z-index: 1;
+                    }
+                </style>'
+            )
+            ->renderHook(
+                'panels::body.end',
+                fn (): string => '<script>
+                    // Cleanup orphan overlays that block the screen
+                    function cleanupOrphanOverlays() {
+                        document.querySelectorAll(".fi-modal-close-overlay, .fixed.inset-0.z-40").forEach(overlay => {
+                            const container = overlay.closest("[x-data]");
+                            const modal = container?.querySelector(".fi-modal-window");
+                            // Hide overlay if no visible modal exists
+                            if (!modal || modal.style.display === "none" || window.getComputedStyle(modal).display === "none") {
+                                overlay.style.pointerEvents = "none";
+                                overlay.style.opacity = "0";
+                                overlay.style.display = "none";
+                            }
+                        });
+                    }
+                    
+                    // Run on page load and navigation
+                    document.addEventListener("DOMContentLoaded", () => setTimeout(cleanupOrphanOverlays, 500));
+                    document.addEventListener("livewire:navigated", () => setTimeout(cleanupOrphanOverlays, 300));
+                    document.addEventListener("livewire:morph.updated", () => setTimeout(cleanupOrphanOverlays, 300));
+                    
+                    // Periodic cleanup as backup
+                    setInterval(cleanupOrphanOverlays, 3000);
+                </script>'
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
