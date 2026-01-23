@@ -157,7 +157,12 @@ class ServiceResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordUrl(
+                fn ($record): string => ServiceResource::getUrl('view', ['record' => $record]),
+            )
+            ->persistSearchInSession()
+            ->persistFiltersInSession();
     }
 
     public static function infolist(Infolist $infolist): Infolist
