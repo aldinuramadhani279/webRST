@@ -15,10 +15,8 @@ class Service extends Model
         'is_featured' => 'boolean',
     ];
 
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
+    // Note: getRouteKeyName removed to fix Filament table actions
+    // Frontend routes now use explicit binding: Route::get('/services/{service:slug}', ...)
 
     public function images()
     {
