@@ -22,6 +22,12 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationGroup = 'Master Data';
 
+    // Override model's getRouteKeyName - use 'id' for Filament routing
+    public static function getRecordRouteKeyName(): ?string
+    {
+        return 'id';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
