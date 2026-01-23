@@ -157,10 +157,7 @@ class ServiceResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->striped()
-            ->defaultSort('title', 'asc')
-            ->deferLoading();
+            ]);
     }
 
     public static function infolist(Infolist $infolist): Infolist
