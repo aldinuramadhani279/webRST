@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden p-8">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden p-8 mb-12">
         <div class="mb-6">
             <h1 class="text-4xl font-bold text-gray-800">{{ $service->title }}</h1>
         </div>
@@ -54,18 +54,104 @@
             </div>
         </div>
 
-        {{-- Image Gallery --}}
+        {{-- Image Gallery Slider --}}
         @if($service->images->isNotEmpty())
             <div class="mt-8">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Galeri</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    @foreach($service->images as $image)
-                        <a href="{{ asset('storage/' . $image->image_path) }}" target="_blank">
-                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="Galeri gambar untuk {{ $service->title }}" class="w-full h-auto object-cover rounded-lg shadow-md hover:opacity-80 transition">
-                        </a>
-                    @endforeach
+                
+                {{-- Swiper Slider --}}
+                <div class="swiper service-gallery-slider">
+                    <div class="swiper-wrapper">
+                        @foreach($service->images as $image)
+                            <div class="swiper-slide">
+                                <a href="{{ asset('storage/' . $image->image_path) }}" data-fancybox="gallery" class="block">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                         alt="Galeri gambar untuk {{ $service->title }}" 
+                                         class="w-full h-64 object-cover rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    {{-- Navigation Buttons --}}
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    
+                    {{-- Pagination --}}
+                    <div class="swiper-pagination mt-4"></div>
                 </div>
             </div>
         @endif
     </div>
+
+    {{-- Swiper CSS & JS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    
+    <style>
+        .service-gallery-slider {
+            padding-bottom: 50px;
+        }
+        .service-gallery-slider .swiper-button-next,
+        .service-gallery-slider .swiper-button-prev {
+            color: #2563eb;
+            background: rgba(255,255,255,0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .service-gallery-slider .swiper-button-next::after,
+        .service-gallery-slider .swiper-button-prev::after {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .service-gallery-slider .swiper-pagination-bullet-active {
+            background: #2563eb;
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Swiper
+            new Swiper('.service-gallery-slider', {
+                slidesPerView: 1,
+                spaceBetween: 16,
+                loop: true,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                    },
+                },
+            });
+            
+            // Initialize Fancybox for gallery
+            if (typeof Fancybox !== 'undefined') {
+                Fancybox.bind('[data-fancybox="gallery"]', {
+                    Thumbs: {
+                        type: "classic",
+                    },
+                });
+            }
+        });
+    </script>
 @endsection

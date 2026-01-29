@@ -46,14 +46,35 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 'panels::head.end',
                 fn (): string => '<style>
+                    /* Prevent overlay from blocking content */
                     .fi-modal-close-overlay {
                         pointer-events: none !important;
                     }
-                    .fi-main, .fi-sidebar, .fi-topbar, .fi-header {
+                    .fi-main, .fi-sidebar, .fi-topbar, .fi-header, .fi-ta-table, .fi-resource-relation-manager {
                         position: relative;
                         z-index: 1;
                     }
-                </style>'
+                    /* Hide stuck dark overlays */
+                    .fixed.inset-0.z-40[style*="opacity: 0"] {
+                        display: none !important;
+                    }
+                </style>
+                <script>
+                    // Catch and suppress dispatchEvent errors on undefined elements
+                    window.addEventListener("error", function(e) {
+                        if (e.message && e.message.includes("dispatchEvent")) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.warn("Suppressed modal dispatchEvent error");
+                            // Force cleanup
+                            document.querySelectorAll(".fi-modal-close-overlay, .fixed.inset-0.z-40").forEach(el => {
+                                el.style.pointerEvents = "none";
+                                el.style.opacity = "0";
+                            });
+                            return true;
+                        }
+                    }, true);
+                </script>'
             )
             ->renderHook(
                 'panels::body.end',
@@ -62,7 +83,11 @@ class AdminPanelProvider extends PanelProvider
                         document.querySelectorAll(".fi-modal-close-overlay, .fixed.inset-0.z-40").forEach(overlay => {
                             const container = overlay.closest("[x-data]");
                             const modal = container?.querySelector(".fi-modal-window");
-                            if (!modal || modal.style.display === "none" || window.getComputedStyle(modal).display === "none") {
+                            const isHidden = !modal || 
+                                modal.style.display === "none" || 
+                                window.getComputedStyle(modal).display === "none" ||
+                                !modal.offsetParent;
+                            if (isHidden) {
                                 overlay.style.pointerEvents = "none";
                                 overlay.style.opacity = "0";
                                 overlay.style.display = "none";
@@ -70,10 +95,14 @@ class AdminPanelProvider extends PanelProvider
                         });
                     }
                     
+                    // Run on various events
                     document.addEventListener("DOMContentLoaded", () => setTimeout(cleanupOrphanOverlays, 500));
                     document.addEventListener("livewire:navigated", () => setTimeout(cleanupOrphanOverlays, 300));
                     document.addEventListener("livewire:morph.updated", () => setTimeout(cleanupOrphanOverlays, 300));
-                    setInterval(cleanupOrphanOverlays, 3000);
+                    document.addEventListener("click", () => setTimeout(cleanupOrphanOverlays, 500));
+                    
+                    // More frequent cleanup
+                    setInterval(cleanupOrphanOverlays, 1500);
                 </script>'
             )
             ->middleware([

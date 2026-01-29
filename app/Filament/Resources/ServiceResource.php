@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServiceResource\Pages;
-use App\Filament\Resources\ServiceResource\RelationManagers\ImagesRelationManager;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -22,78 +21,108 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationGroup = 'Master Data';
 
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Nama Layanan'),
-
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Slug')
-                    ->helperText('Otomatis diisi berdasarkan nama layanan jika dikosongkan'),
-
-                Forms\Components\Select::make('category')
-                    ->options([
-                        'rawat_jalan' => 'Rawat Jalan',
-                        'rawat_inap' => 'Rawat Inap',
-                        'penunjang' => 'Penunjang',
-                    ])
-                    ->required()
-                    ->label('Kategori'),
-
-                Forms\Components\RichEditor::make('content')
-                    ->required()
-                    ->columnSpanFull()
-                    ->label('Deskripsi'),
-
-                Forms\Components\Radio::make('upload_type')
-                    ->label('Tipe Unggahan')
-                    ->options([
-                        'image' => 'Gambar',
-                        'pdf' => 'PDF',
-                    ])
-                    ->default('image')
-                    ->live()
-                    ->required(),
-
-                Forms\Components\FileUpload::make('image')
-                    ->image()
-                    ->imageEditor()
-                    ->imageEditorAspectRatios([
-                        '4:3',
-                        '16:9',
-                        '1:1',
-                        null, // Free crop
-                    ])
-                    ->disk('public')
-                    ->label('Gambar')
-                    ->maxSize(2048)
-                    ->directory('services')
-                    ->visible(fn ($get) => $get('upload_type') === 'image'),
-
-                Forms\Components\FileUpload::make('file_path')
-                    ->label('Unggah PDF')
-                    ->disk('public')
-                    ->directory('service-files')
-                    ->acceptedFileTypes(['application/pdf'])
-                    ->maxSize(5120) // Maksimal 5MB for PDF
-                    ->visible(fn ($get) => $get('upload_type') === 'pdf')
-                    ->required(fn ($get) => $get('upload_type') === 'pdf'),
-
-                Forms\Components\Toggle::make('is_featured')
-                    ->label('Layanan Utama')
-                    ->helperText('Centang jika ini adalah layanan utama yang akan ditampilkan di halaman home')
-                    ->default(false),
-
-                Forms\Components\Section::make('Kontak Tambahan')
-                    ->description('Opsional: Tambahkan link kontak untuk layanan ini.')
+                Forms\Components\Section::make('Informasi Layanan')
                     ->schema([
+                        Forms\Components\TextInput::make('title')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Nama Layanan'),
+
+                        Forms\Components\TextInput::make('slug')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Slug')
+                            ->helperText('Otomatis diisi berdasarkan nama layanan jika dikosongkan'),
+
+                        Forms\Components\Select::make('category')
+                            ->options([
+                                'rawat_jalan' => 'Rawat Jalan',
+                                'rawat_inap' => 'Rawat Inap',
+                                'penunjang' => 'Penunjang',
+                            ])
+                            ->required()
+                            ->label('Kategori'),
+
+                        Forms\Components\RichEditor::make('content')
+                            ->required()
+                            ->columnSpanFull()
+                            ->label('Deskripsi'),
+                    ]),
+
+                Forms\Components\Section::make('Media Utama')
+                    ->schema([
+                        Forms\Components\Radio::make('upload_type')
+                            ->label('Tipe Unggahan')
+                            ->options([
+                                'image' => 'Gambar',
+                                'pdf' => 'PDF',
+                            ])
+                            ->default('image')
+                            ->live()
+                            ->required(),
+
+                        Forms\Components\FileUpload::make('image')
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                '4:3',
+                                '16:9',
+                                '1:1',
+                                null,
+                            ])
+                            ->disk('public')
+                            ->label('Gambar Thumbnail')
+                            ->maxSize(2048)
+                            ->directory('services')
+                            ->visible(fn ($get) => $get('upload_type') === 'image'),
+
+                        Forms\Components\FileUpload::make('file_path')
+                            ->label('Unggah PDF')
+                            ->disk('public')
+                            ->directory('service-files')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->maxSize(5120)
+                            ->visible(fn ($get) => $get('upload_type') === 'pdf')
+                            ->required(fn ($get) => $get('upload_type') === 'pdf'),
+                    ]),
+
+                Forms\Components\Section::make('Galeri Gambar')
+                    ->description('Upload gambar-gambar untuk slider di halaman detail layanan')
+                    ->schema([
+                        Forms\Components\FileUpload::make('gallery_images')
+                            ->label('Gambar Galeri')
+                            ->helperText('Pilih beberapa gambar sekaligus. Gambar akan otomatis di-compress.')
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                                null, // Free crop
+                            ])
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth(1200)
+                            ->imageResizeTargetHeight(900)
+                            ->multiple()
+                            ->reorderable()
+                            ->disk('public')
+                            ->directory('service-galleries')
+                            ->maxFiles(20)
+                            ->maxSize(10240)
+                            ->columnSpanFull(),
+                    ]),
+
+                Forms\Components\Section::make('Pengaturan Lainnya')
+                    ->schema([
+                        Forms\Components\Toggle::make('is_featured')
+                            ->label('Layanan Utama')
+                            ->helperText('Centang jika ini adalah layanan utama yang akan ditampilkan di halaman home')
+                            ->default(false),
+
                         Forms\Components\Select::make('contact_icon')
                             ->options([
                                 'whatsapp' => 'WhatsApp',
@@ -102,10 +131,12 @@ class ServiceResource extends Resource
                                 'globe' => 'Website',
                             ])
                             ->label('Ikon Kontak'),
+
                         Forms\Components\TextInput::make('contact_link')
                             ->label('Link Kontak (URL)')
                             ->placeholder('Contoh: https://wa.me/62... atau https://www.instagram.com/...')
-                            ->url(),
+                            ->url()
+                            ->helperText('Opsional: Tambahkan link kontak untuk layanan ini.'),
                     ]),
             ]);
     }
@@ -167,26 +198,26 @@ class ServiceResource extends Resource
             ->schema([
                 Infolists\Components\Section::make('Informasi Layanan')
                     ->schema([
-                        Infolists\Components\TextEntry::make('title')->label('Nama Layanan'),
-                        Infolists\Components\TextEntry::make('slug'),
-                        Infolists\Components\TextEntry::make('category'),
-                        Infolists\Components\TextEntry::make('content')->label('Deskripsi')->html()->columnSpanFull(),
-                    ])->columns(2),
-
-                Infolists\Components\Section::make('Media')
-                    ->schema([
-                        Infolists\Components\ImageEntry::make('image')
-                            ->visible(fn ($record) => $record->upload_type === 'image' && $record->image),
-                                                                Infolists\Components\ViewEntry::make('file_path')
-                                                                    ->label('Dokumen PDF')
-                                                                    ->view('infolists.components.download-link')
-                                                                    ->visible(fn ($record) => $record->upload_type === 'pdf' && $record->file_path),                    ]),
-
-                Infolists\Components\Section::make('Info Tambahan')
-                    ->schema([
-                        Infolists\Components\IconEntry::make('is_featured')->boolean()->label('Layanan Utama'),
-                        Infolists\Components\TextEntry::make('contact_icon'),
-                        Infolists\Components\TextEntry::make('contact_link')->url(fn($record) => $record->contact_link, true),
+                        Infolists\Components\TextEntry::make('title')
+                            ->label('Nama Layanan'),
+                        Infolists\Components\TextEntry::make('category')
+                            ->badge()
+                            ->formatStateUsing(function ($state) {
+                                $categories = [
+                                    'rawat_jalan' => 'Rawat Jalan',
+                                    'rawat_inap' => 'Rawat Inap',
+                                    'penunjang' => 'Penunjang',
+                                ];
+                                return $categories[$state] ?? $state;
+                            })
+                            ->label('Kategori'),
+                        Infolists\Components\IconEntry::make('is_featured')
+                            ->label('Layanan Utama')
+                            ->boolean(),
+                        Infolists\Components\TextEntry::make('content')
+                            ->html()
+                            ->columnSpanFull()
+                            ->label('Deskripsi'),
                     ])->columns(3),
             ]);
     }
@@ -194,7 +225,7 @@ class ServiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ImagesRelationManager::class,
+            // Removed ImagesRelationManager to avoid modal bugs
         ];
     }
 
