@@ -1,11 +1,66 @@
 @extends('layouts.app')
 
+{{-- SEO: Title spesifik untuk halaman Home --}}
+@section('title', 'Beranda - RST dr. Asmir Salatiga | Rumah Sakit TNI Terpercaya')
+
+{{-- SEO: Meta description yang kaya keyword untuk halaman Home --}}
+@section('meta_description', 'RST dr. Asmir Salatiga - Rumah Sakit TNI dengan layanan IGD 24 jam, Rawat Jalan, Rawat Inap, dan dokter spesialis berpengalaman. Melayani dengan hati, profesional dan terpercaya di Salatiga, Jawa Tengah.')
+
+{{-- SEO: Canonical URL menunjuk ke halaman utama --}}
+@section('canonical', url('/'))
+
+{{-- SEO: JSON-LD Schema.org Hospital untuk hasil pencarian yang kaya (rich results) --}}
+@section('schema_json'){
+    "@context": "https://schema.org",
+    "@type": "Hospital",
+    "name": "RST dr. Asmir Salatiga",
+    "alternateName": ["Rumah Sakit TNI dr. Asmir", "RST Asmir Salatiga", "RS Asmir"],
+    "description": "Rumah Sakit TNI dr. Asmir Salatiga memberikan pelayanan kesehatan profesional dengan dokter spesialis berpengalaman, IGD 24 jam, rawat jalan, rawat inap, dan fasilitas medis lengkap.",
+    "url": "{{ url('/') }}",
+    "logo": "{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}",
+    "image": "{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ $settings['address'] ?? 'Jl. Osamaliki No.24' }}",
+        "addressLocality": "Salatiga",
+        "addressRegion": "Jawa Tengah",
+        "postalCode": "50722",
+        "addressCountry": "ID"
+    },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "-7.3311",
+        "longitude": "110.4981"
+    },
+    "telephone": "{{ $settings['phone'] ?? '+62298324568' }}",
+    "email": "{{ $settings['email'] ?? 'info@rstdrasmir.com' }}",
+    "openingHoursSpecification": [
+        {
+            "@type": "OpeningHoursSpecification",
+            "name": "IGD",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            "opens": "00:00",
+            "closes": "23:59"
+        },
+        {
+            "@type": "OpeningHoursSpecification",
+            "name": "Poliklinik",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            "opens": "08:00",
+            "closes": "21:00"
+        }
+    ],
+    "hasMap": "https://maps.google.com/?q=RST+dr+Asmir+Salatiga",
+    "sameAs": []
+}
+@endsection
+
 @section('content')
     {{-- Hero Section --}}
     <div class="relative max-h-[400px] overflow-hidden rounded-xl mx-3 mt-3 mb-3 border-4 border-white shadow-xl">
         <!-- Background Image -->
         <img src="{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}"
-             alt="Banner RST dr Asmir"
+             alt="Banner RST dr Asmir Salatiga - Rumah Sakit TNI Salatiga"
              class="w-full h-full object-cover">
 
         <!-- Overlay -->

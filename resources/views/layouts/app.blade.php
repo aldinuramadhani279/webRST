@@ -3,13 +3,86 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RST dr Asmir Salatiga</title>
+
+    {{-- Dynamic Title --}}
+    <title>
+        @hasSection('title')
+            @yield('title') | RST dr. Asmir Salatiga
+        @else
+            RST dr. Asmir Salatiga - Rumah Sakit Terpercaya
+        @endif
+    </title>
+
+    {{-- Meta Description (SEO) --}}
+    @hasSection('meta_description')
+        <meta name="description" content="@yield('meta_description')">
+    @else
+        <meta name="description" content="RST dr. Asmir Salatiga - Rumah Sakit TNI yang memberikan pelayanan kesehatan profesional dengan dokter spesialis berpengalaman, IGD 24 jam, dan fasilitas lengkap di Salatiga.">
+    @endif
+
+    {{-- Canonical URL --}}
+    @hasSection('canonical')
+        <link rel="canonical" href="@yield('canonical')">
+    @else
+        <link rel="canonical" href="{{ url()->current() }}">
+    @endif
+
+    {{-- Open Graph (untuk sharing di media sosial) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="RST dr. Asmir Salatiga">
+    <meta property="og:title" content="@hasSection('title') @yield('title') | RST dr. Asmir Salatiga @else RST dr. Asmir Salatiga @endif">
+    <meta property="og:description" content="@hasSection('meta_description') @yield('meta_description') @else RST dr. Asmir Salatiga - Pelayanan kesehatan profesional dan terpercaya di Salatiga. @endif">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ !empty($settings['banner_image']) ? asset('storage/' . $settings['banner_image']) : asset('assets/images/bannerbaru.jpg') }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@hasSection('title') @yield('title') @else RST dr. Asmir Salatiga @endif">
+    <meta name="twitter:description" content="@hasSection('meta_description') @yield('meta_description') @else RST dr. Asmir Salatiga - Pelayanan kesehatan profesional di Salatiga. @endif">
+
+    {{-- Robots --}}
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
+    {{-- Favicon --}}
     <link rel="icon" href="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}" type="image/png">
+
+    {{-- CSS --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- Alpine.js for frontend (loaded via CDN, separated from Filament's Alpine) -->
+
+    {{-- Alpine.js for frontend (loaded via CDN, separated from Filament's Alpine) --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    {{-- JSON-LD Structured Data --}}
+    @hasSection('schema_json')
+        <script type="application/ld+json">
+            @yield('schema_json')
+        </script>
+    @else
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "name": "RST dr. Asmir Salatiga",
+            "url": "{{ url('/') }}",
+            "logo": "{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "{{ $settings['address'] ?? 'Jl. Osamaliki No.24' }}",
+                "addressLocality": "Salatiga",
+                "addressRegion": "Jawa Tengah",
+                "addressCountry": "ID"
+            },
+            "telephone": "{{ $settings['phone'] ?? '(0298) 324568' }}",
+            "email": "{{ $settings['email'] ?? 'info@rstdrasmir.com' }}"
+        }
+        </script>
+    @endif
+
+    {{-- Tambahan head section per halaman --}}
+    @yield('head')
 </head>
 <body class="bg-gradient-to-br from-blue-100 via-slate-50 to-cyan-100 min-h-screen text-gray-800 font-sans selection:bg-blue-100 selection:text-blue-900">
     <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-2xl transition-all duration-300" x-data="{ mobileMenuOpen: false }">
@@ -18,7 +91,7 @@
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
                     <a href="/" class="flex items-center space-x-3">
-                        <img src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}" alt="Logo" class="h-12 w-auto">
+                        <img src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}" alt="Logo RST dr. Asmir Salatiga" class="h-12 w-auto">
                         <span class="text-xl font-bold text-gray-800">RST dr. Asmir</span>
                     </a>
                 </div>
@@ -211,7 +284,7 @@
                 <div class="flex flex-col">
                     <div class="flex items-center gap-3 mb-4">
                         <img src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}" 
-                             alt="Logo" 
+                             alt="Logo RST dr. Asmir" 
                              class="w-10 h-10 object-contain bg-white rounded p-1 flex-shrink-0"
                              style="max-width: 40px; max-height: 40px;"
                              onerror="this.src='https://placehold.co/40x40/3b82f6/ffffff?text=RST';">
