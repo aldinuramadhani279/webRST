@@ -21,7 +21,7 @@ class PopularPagesWidget extends BaseWidget
         return $table
             ->query(
                 PageVisit::query()
-                    ->selectRaw('page_name, url, COUNT(*) as visit_count, MAX(created_at) as last_visited')
+                    ->selectRaw('MAX(id) as id, page_name, url, COUNT(*) as visit_count, MAX(created_at) as last_visited')
                     ->groupBy('page_name', 'url')
                     ->orderByDesc('visit_count')
             )
