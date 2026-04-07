@@ -16,7 +16,10 @@ class DoctorController extends Controller
         $doctors = Doctor::when($specializationId, function ($query) use ($specializationId) {
             return $query->where('specialization_id', $specializationId);
         })
-            ->with('specialization') // Eager load already defined in model
+            ->where('is_active', true)
+            ->with('specialization')
+            ->orderByRaw('CASE WHEN photo IS NOT NULL AND photo != "" THEN 0 ELSE 1 END')
+            ->orderBy('name', 'asc')
             ->simplePaginate(12);
 
         $specializations = Cache::remember('all_specializations', 3600, function () {

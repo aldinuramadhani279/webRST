@@ -24,7 +24,13 @@ class ScheduleResource extends Resource
         return $form
             ->schema([
                 Select::make('doctor_id')
-                    ->relationship('doctor', 'name')
+                    ->relationship(
+                        name: 'doctor',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn ($query) => $query->where('is_active', true)->orderBy('name', 'asc')
+                    )
+                    ->searchable()
+                    ->preload()
                     ->required()
                     ->columnSpanFull(),
                 Select::make('day')
