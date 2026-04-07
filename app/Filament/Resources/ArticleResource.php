@@ -40,6 +40,7 @@ class ArticleResource extends Resource
                     ->required()
                     ->columnSpanFull(),
                 FileUpload::make('thumbnail')
+                    ->label('Thumbnail (Opsional)')
                     ->image()
                     ->imageEditor()
                     ->imageEditorAspectRatios([
@@ -51,6 +52,7 @@ class ArticleResource extends Resource
                     ->disk('public')
                     ->directory('articles')
                     ->maxSize(2048)
+                    ->nullable()
                     ->columnSpanFull(),
                 Select::make('status')
                     ->options([
@@ -83,7 +85,7 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail')->disk('public'),
+                ImageColumn::make('thumbnail')->disk('public')->defaultImageUrl(asset('assets/images/logorst.png')),
                 TextColumn::make('title')->searchable()->sortable(),
                 TextColumn::make('slug')->searchable(),
                 TextColumn::make('status')->sortable(),

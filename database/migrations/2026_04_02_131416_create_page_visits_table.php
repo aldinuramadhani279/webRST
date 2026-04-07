@@ -7,21 +7,23 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Migration ini adalah duplikat yang sudah tidak digunakan.
+     * Tabel page_visits sudah dibuat oleh migration 2026_04_02_000001.
+     * Dibiarkan kosong agar tidak mengganggu proses migrate.
      */
     public function up(): void
     {
-        Schema::create('page_visits', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Skip: tabel page_visits sudah dibuat oleh migration sebelumnya
+        if (!Schema::hasTable('page_visits')) {
+            Schema::create('page_visits', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('page_visits');
+        // Tidak ada aksi rollback untuk migration duplikat ini
     }
 };
