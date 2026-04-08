@@ -13,7 +13,7 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $this->doctor->specialization?->name ?? 'Umum' }} &bull; SIP: {{ $this->doctor->sip_number }}</p>
             </div>
             <div class="ml-auto">
-                <a href="{{ \App\Filament\Resources\ScheduleResource::getUrl('select') }}"
+                <a href="{{ \App\Filament\Resources\ScheduleResource::getUrl('index') }}"
                    class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 flex items-center gap-1">
                     <x-heroicon-o-arrow-left class="h-4 w-4" />
                     Ganti Dokter

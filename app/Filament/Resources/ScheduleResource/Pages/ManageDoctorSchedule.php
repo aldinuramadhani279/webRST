@@ -22,7 +22,7 @@ class ManageDoctorSchedule extends Page
 
     public static array $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
-    public function mount(int $doctorId): void
+    public function mount($doctorId): void
     {
         $this->doctorId = $doctorId;
         $this->doctor = Doctor::with('specialization')->findOrFail($doctorId);
