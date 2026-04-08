@@ -23,15 +23,18 @@ class ListSchedules extends ListRecords
                 ->action(function () {
                     return Excel::download(new DoctorScheduleExport, 'template_jadwal_dokter.xlsx');
                 }),
-            
-            // Use URL redirect instead of modal to avoid Alpine modal issues
+
             Action::make('importSchedule')
                 ->label('Import Jadwal')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('warning')
-                ->url(fn () => ScheduleResource::getUrl('import')),
-            
-            Actions\CreateAction::make(),
+                ->url(fn() => ScheduleResource::getUrl('import')),
+
+            Action::make('kelolaJadwal')
+                ->label('Kelola Jadwal')
+                ->icon('heroicon-o-pencil-square')
+                ->color('primary')
+                ->url(fn() => ScheduleResource::getUrl('select')),
         ];
     }
 }

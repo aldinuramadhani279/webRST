@@ -26,10 +26,6 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             $hari = $row['hari'] ?? null;
             $sipNumber = $row['nomor_sip'] ?? null;
             
-            // Second session (optional)
-            $jamMulai2 = $row['jam_mulai_2'] ?? null;
-            $jamSelesai2 = $row['jam_selesai_2'] ?? null;
-            
             // If schedule time is not filled, skip this row
             if (empty($jamMulai) || empty($jamSelesai)) {
                 $this->skipCount++;
@@ -40,7 +36,10 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             $doctor = Doctor::where('sip_number', $sipNumber)->first();
             
             if (!$doctor) {
-                $this->errors[] = "Baris {$rowNumber}: Dokter dengan SIP '{$sipNumber}' tidak ditemukan";
+                // To avoid too many errors, only log if it's not the example row
+                if ($row['no'] !== '(Contoh)') {
+                    $this->errors[] = "Baris {$rowNumber}: Dokter dengan SIP '{$sipNumber}' tidak ditemukan";
+                }
                 continue;
             }
 
@@ -51,34 +50,33 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // Format time (handle Excel time format)
+            // Format time
             $startTime = $this->formatTime($jamMulai);
             $endTime = $this->formatTime($jamSelesai);
 
             if (!$startTime || !$endTime) {
-                $this->errors[] = "Baris {$rowNumber}: Format waktu tidak valid (jam_mulai: {$jamMulai}, jam_selesai: {$jamSelesai})";
+                $this->errors[] = "Baris {$rowNumber}: Format waktu tidak valid";
                 continue;
             }
 
-            // Format second session times (nullable)
-            $startTime2 = !empty($jamMulai2) ? $this->formatTime($jamMulai2) : null;
-            $endTime2 = !empty($jamSelesai2) ? $this->formatTime($jamSelesai2) : null;
+            // Check if this exact schedule already exists to avoid duplicates
+            $exists = Schedule::where('doctor_id', $doctor->id)
+                ->where('day', $hari)
+                ->where('start_time', $startTime)
+                ->where('end_time', $endTime)
+                ->exists();
 
-            // Update or create schedule
-            Schedule::updateOrCreate(
-                [
-                    'doctor_id' => $doctor->id,
-                    'day' => $hari,
-                ],
-                [
+            if (!$exists) {
+                Schedule::create([
+                    'doctor_id'  => $doctor->id,
+                    'day'        => $hari,
                     'start_time' => $startTime,
-                    'end_time' => $endTime,
-                    'start_time_2' => $startTime2,
-                    'end_time_2' => $endTime2,
-                ]
-            );
-
-            $this->successCount++;
+                    'end_time'   => $endTime,
+                ]);
+                $this->successCount++;
+            } else {
+                $this->skipCount++; // Skip exact duplicates
+            }
         }
     }
 
@@ -88,14 +86,11 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             return null;
         }
 
-        // If it's a decimal (Excel time format), use PhpSpreadsheet converter
         if (is_numeric($value) && $value > 0 && $value < 1) {
             try {
-                // Use PhpSpreadsheet's official converter
                 $dateTime = Date::excelToDateTimeObject($value);
                 return $dateTime->format('H:i:00');
             } catch (\Exception $e) {
-                // Fallback to manual calculation
                 $totalMinutes = round($value * 24 * 60);
                 $hours = floor($totalMinutes / 60) % 24;
                 $minutes = $totalMinutes % 60;
@@ -103,7 +98,6 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             }
         }
 
-        // If it's a larger number (Excel serial date), extract time part only
         if (is_numeric($value) && $value >= 1) {
             try {
                 $dateTime = Date::excelToDateTimeObject($value);
@@ -113,7 +107,6 @@ class DoctorScheduleImport implements ToCollection, WithHeadingRow
             }
         }
 
-        // If it's already in HH:MM or HH:MM:SS format (string)
         if (is_string($value)) {
             if (preg_match('/^(\d{1,2}):(\d{2})(?::\d{2})?$/', trim($value), $matches)) {
                 $hours = intval($matches[1]) % 24;
