@@ -63,8 +63,7 @@ class ScheduleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'   => Pages\ListSchedules::route('/'),
-            'select'  => Pages\SelectDoctor::route('/select-doctor'),
+            'index'   => Pages\SelectDoctor::route('/'),
             'manage'  => Pages\ManageDoctorSchedule::route('/manage/{doctorId}'),
             'import'  => Pages\ImportSchedule::route('/import'),
         ];

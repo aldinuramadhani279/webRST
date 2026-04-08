@@ -27,6 +27,20 @@ class SelectDoctor extends Page
 
     protected function getHeaderActions(): array
     {
-        return [];
+        return [
+            \Filament\Actions\Action::make('downloadTemplate')
+                ->label('Download Template')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('success')
+                ->action(function () {
+                    return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\DoctorScheduleExport, 'template_jadwal_dokter.xlsx');
+                }),
+
+            \Filament\Actions\Action::make('importSchedule')
+                ->label('Import Jadwal')
+                ->icon('heroicon-o-arrow-up-tray')
+                ->color('warning')
+                ->url(fn() => ScheduleResource::getUrl('import')),
+        ];
     }
 }
