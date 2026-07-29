@@ -51,6 +51,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles') 
 
     {{-- Alpine.js for frontend (loaded via CDN, separated from Filament's Alpine) --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -123,6 +124,8 @@
                             <a href="{{ route('gallery.videos') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Video</a>
                         </div>
                     </div>
+                    <!-- PPID -->
+                    <a href="{{ route('ppid.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('ppid.index') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">PPID</a>
                 </div>
 
                 <!-- Contact Button (Desktop) -->
@@ -244,6 +247,9 @@
                         <a href="{{ route('gallery.videos') }}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-blue-600">Video</a>
                     </div>
                  </div>
+
+                 <!-- Mobile PPID -->
+                 <a href="{{ route('ppid.index') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('ppid.index') ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">PPID</a>
 
                  <!-- Mobile Emergency Button -->
                  <div class="pt-4 border-t border-gray-100">
