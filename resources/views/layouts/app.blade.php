@@ -93,16 +93,16 @@
                 <div class="flex items-center space-x-3">
                     <a href="/" class="flex items-center space-x-3">
                         <img src="{{ !empty($settings['logo']) ? asset('storage/' . $settings['logo']) : asset('assets/images/logorst.png') }}" alt="Logo RST dr. Asmir Salatiga" class="h-12 w-auto">
-                        <span class="text-xl font-bold text-gray-800">RST dr. Asmir</span>
+                        <span class="text-xl font-bold text-gray-800 whitespace-nowrap md:hidden lg:inline">RST dr. Asmir</span>
                     </a>
                 </div>
 
                 <!-- Primary Nav (Desktop) -->
-                <div class="hidden md:flex items-center space-x-2">
+                <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                     <a href="/" class="px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->is('/') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Home</a>
                     <a href="{{ route('doctors.index') }}" class="px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('doctors.index') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">Dokter</a>
                     <!-- Dropdown Layanan -->
-                    <div x-data="{ open: false }" @click.away="open = false" class="relative">
+                    <div x-data="{ open: false }" @click.away="open = false" class="relative"> 
                         <button @click="open = !open" class="flex items-center w-full px-3 py-2 rounded-md text-base font-medium transition-all duration-300 {{ request()->routeIs('services.featured') || request()->routeIs('services.other') ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600' }}">
                             <span>Layanan</span>
                             <svg class="w-4 h-4 ml-1 transition-transform duration-200" :class="{'rotate-180': open}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
