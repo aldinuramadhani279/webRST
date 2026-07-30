@@ -16,51 +16,58 @@ class ServiceSeeder extends Seeder
      */
     public function run()
     {
-        // Daftar layanan utama berdasarkan nama file (tanpa ekstensi)
-        $featuredServices = [
-            'FisioTerapi',
-            'KonsultasiGigi',
-            'PemeriksaanUmum',
-            'Radiologi',
-            'Laboraturium', // Ini mewakili 'Test Laboratorium'
-            'Vaksinasi',
+        $defaultServices = [
+            ['title' => 'Pemeriksaan Umum', 'category' => 'rawat_jalan', 'is_featured' => true],
+            ['title' => 'Konsultasi Gigi', 'category' => 'rawat_jalan', 'is_featured' => true],
+            ['title' => 'Fisioterapi', 'category' => 'rawat_jalan', 'is_featured' => true],
+            ['title' => 'Vaksinasi', 'category' => 'rawat_jalan', 'is_featured' => true],
+            ['title' => 'Test Laboratorium', 'category' => 'penunjang', 'is_featured' => true],
+            ['title' => 'Radiologi', 'category' => 'penunjang', 'is_featured' => true],
+            ['title' => 'Rawat Inap VIP', 'category' => 'rawat_inap', 'is_featured' => false],
+            ['title' => 'Rawat Inap Kelas 1', 'category' => 'rawat_inap', 'is_featured' => false],
         ];
 
         $imagePath = public_path('assets/images/services');
 
-        if (! File::isDirectory($imagePath)) {
-            $this->command->error('Direktori gambar layanan tidak ditemukan di: '.$imagePath);
+        if (File::isDirectory($imagePath)) {
+            $files = File::files($imagePath);
+            foreach ($files as $file) {
+                $fileName = $file->getFilenameWithoutExtension();
+                $title = trim(preg_replace('/(?<!^)[A-Z]/', ' $0', $fileName));
+                
+                // Tentukan kategori sederhana berdasarkan judul
+                $category = 'rawat_jalan';
+                if (Str::contains(strtolower($title), ['laborat', 'radiologi'])) {
+                    $category = 'penunjang';
+                } elseif (Str::contains(strtolower($title), ['inap'])) {
+                    $category = 'rawat_inap';
+                }
 
-            return;
+                Service::updateOrCreate(
+                    ['title' => $title],
+                    [
+                        'slug' => Str::slug($title),
+                        'category' => $category,
+                        'image' => 'services/'.$file->getFilename(),
+                        'content' => "Deskripsi lengkap untuk layanan {$title} akan segera tersedia. Kami menyediakan layanan {$title} dengan dukungan tenaga medis profesional dan peralatan modern.",
+                        'is_featured' => true,
+                    ]
+                );
+            }
         }
 
-        $files = File::files($imagePath);
-
-        foreach ($files as $file) {
-            $fileName = $file->getFilenameWithoutExtension();
-
-            // Membuat judul yang lebih mudah dibaca dari nama file PascalCase
-            $title = trim(preg_replace('/(?<!^)[A-Z]/', ' $0', $fileName));
-
-            // Periksa apakah layanan ini adalah layanan utama
-            $isFeatured = in_array($fileName, $featuredServices);
-
-            // Konten placeholder
-            $content = "Deskripsi lengkap untuk layanan {$title} akan segera tersedia. Kami menyediakan layanan {$title} dengan dukungan tenaga medis profesional dan peralatan modern untuk memastikan Anda mendapatkan penanganan terbaik.";
-
-            // Gunakan updateOrCreate untuk menghindari duplikasi data
-            // Cocokkan berdasarkan 'title' untuk memastikan konsistensi
-            Service::updateOrCreate(
-                ['title' => $title],
+        // Pastikan sampel dasar selalu terisi
+        foreach ($defaultServices as $srv) {
+            Service::firstOrCreate(
+                ['title' => $srv['title']],
                 [
-                    'slug' => Str::slug($title),
-                    'image' => 'services/'.$file->getFilename(), // Menambahkan path direktori
-                    'content' => $content,
-                    'is_featured' => $isFeatured,
+                    'slug' => Str::slug($srv['title']),
+                    'category' => $srv['category'],
+                    'content' => "Deskripsi lengkap untuk layanan {$srv['title']} dengan fasilitas lengkap dan dokter ahli.",
+                    'image' => null,
+                    'is_featured' => $srv['is_featured'],
                 ]
             );
-
-            $this->command->info("Layanan '{$title}' telah di-seed ke database.");
         }
     }
 }

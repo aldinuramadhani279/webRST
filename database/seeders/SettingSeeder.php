@@ -12,22 +12,21 @@ class SettingSeeder extends Seeder
      */
     public function run(): void
     {
-        // General Settings
-        Setting::updateOrCreate(
-            ['key' => 'emergency_number'],
-            ['value' => '(0298) 324568', 'type' => 'string']
-        );
+        $settings = [
+            ['key' => 'emergency_number', 'value' => '(0298) 324568', 'type' => 'string'],
+            ['key' => 'hospital_name', 'value' => 'RST dr. Asmir Salatiga', 'type' => 'string'],
+            ['key' => 'hospital_address', 'value' => 'Jl. Muwardi No.9, Salatiga, Jawa Tengah', 'type' => 'string'],
+            ['key' => 'hospital_phone', 'value' => '(0298) 324568', 'type' => 'string'],
+            ['key' => 'hospital_email', 'value' => 'info@rstdrasmirsalatiga.co.id', 'type' => 'string'],
+            ['key' => 'banner_image', 'value' => '', 'type' => 'image'],
+            ['key' => 'logo', 'value' => '', 'type' => 'image'],
+        ];
 
-        // Homepage Banner
-        Setting::updateOrCreate(
-            ['key' => 'banner_image'],
-            ['value' => '', 'type' => 'image']
-        );
-
-        // Site Logo
-        Setting::updateOrCreate(
-            ['key' => 'logo'],
-            ['value' => '', 'type' => 'image']
-        );
+        foreach ($settings as $setting) {
+            Setting::updateOrCreate(
+                ['key' => $setting['key']],
+                ['value' => $setting['value'], 'type' => $setting['type']]
+            );
+        }
     }
 }
