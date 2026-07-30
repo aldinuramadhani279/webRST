@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PpidController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,7 @@ Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index'
 Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('doctors.show');
 Route::get('/gallery/photos', [GalleryController::class, 'photos'])->name('gallery.photos');
 Route::get('/gallery/videos', [GalleryController::class, 'videos'])->name('gallery.videos');
+Route::get('/ppid', [PpidController::class, 'index'])->name('ppid.index');
 
 // SEO: Sitemap XML
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
