@@ -31,6 +31,7 @@ Route::get('/doctors/{doctor}', [DoctorController::class, 'show'])->name('doctor
 Route::get('/gallery/photos', [GalleryController::class, 'photos'])->name('gallery.photos');
 Route::get('/gallery/videos', [GalleryController::class, 'videos'])->name('gallery.videos');
 Route::get('/ppid', [PpidController::class, 'index'])->name('ppid.index');
+Route::get('/ppid/{category}', [PpidController::class, 'category'])->name('ppid.category');
 
 // SEO: Sitemap XML
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
